@@ -270,7 +270,7 @@ export default function CinematicCTA({ onApply }: Props) {
             </MagneticButton>
 
             <p className="text-xs text-[#6b7280]">
-              🔒 Plazas limitadas · Aplicar no te obliga a nada
+              Plazas limitadas · Aplicar no te obliga a nada
             </p>
           </div>
         </div>
