@@ -30,13 +30,9 @@ const capitalOptions: { label: string; tag: BudgetTag }[] = [
 
 const TOTAL_STEPS = 5;
 
-type ContactType = "phone" | "email";
-
 const Apply = ({ onBack, onComplete }: Props) => {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
-  const [contactType, setContactType] = useState<ContactType>("phone");
-  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [problem, setProblem] = useState<string | null>(null);
   const [capital, setCapital] = useState<{ label: string; tag: BudgetTag } | null>(null);
@@ -51,9 +47,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
       if (raw) {
         const d = JSON.parse(raw);
         if (d.name) setName(d.name);
-        if (d.phone) setPhone(d.phone);
         if (d.email) setEmail(d.email);
-        if (d.contactType) setContactType(d.contactType);
         if (d.problem) setProblem(d.problem);
         if (d.capital) setCapital(d.capital);
         if (typeof d.urgency === "number") setUrgency(d.urgency);
@@ -68,20 +62,19 @@ const Apply = ({ onBack, onComplete }: Props) => {
     try {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ name, phone, email, contactType, problem, capital, urgency })
+        JSON.stringify({ name, email, problem, capital, urgency })
       );
     } catch {
       /* ignore */
     }
-  }, [name, phone, email, contactType, problem, capital, urgency]);
+  }, [name, email, problem, capital, urgency]);
 
   const next = () => setStep((s) => Math.min(TOTAL_STEPS + 1, s + 1));
 
   const sendToWebhook = async () => {
-    const contacto = contactType === "phone" ? `+34 ${phone}` : email;
     const payload = {
       nombre: name.trim(),
-      contacto,
+      contacto: email.trim(),
       problema: problem,
       capital: capital?.label ?? null,
       urgencia: urgency,
@@ -93,7 +86,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-      mode: "no-cors", // webhook may not allow CORS; avoid hard fail
+      mode: "no-cors",
     });
     return res;
   };
@@ -104,7 +97,6 @@ const Apply = ({ onBack, onComplete }: Props) => {
     setStep(6);
     try {
       await sendToWebhook();
-      // small delay so the loading shows
       await new Promise((r) => setTimeout(r, 1200));
       try {
         localStorage.removeItem(STORAGE_KEY);
@@ -130,19 +122,20 @@ const Apply = ({ onBack, onComplete }: Props) => {
   };
 
   const validEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-  const validPhone = (v: string) => v.replace(/\D/g, "").length >= 9;
 
   const canNext1 = name.trim().length >= 3;
-  const canNext2 =
-    contactType === "phone" ? validPhone(phone) : validEmail(email);
+  const canNext2 = validEmail(email);
   const canNext3 = !!problem;
   const canNext4 = !!capital;
   const canSubmit = urgency >= 1 && urgency <= 10;
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
+    <div className="relative min-h-screen bg-white flex flex-col font-sans overflow-hidden">
+      {/* Subtle grid background */}
+      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-50" />
+
       {/* Header */}
-      <header className="border-b border-[#e5e7eb] px-4 sm:px-6 py-4 flex items-center justify-between">
+      <header className="relative z-10 border-b border-[#e5e7eb] px-4 sm:px-6 py-4 flex items-center justify-between bg-white/80 backdrop-blur">
         <a href="#" className="font-extrabold text-lg">
           <span className="text-[#0a0a0a]">ECOM</span>
           <span className="text-[#e31c1c]"> LOIAN</span>
@@ -156,14 +149,14 @@ const Apply = ({ onBack, onComplete }: Props) => {
       </header>
 
       {/* Progress bar */}
-      <div className="h-1 bg-[#f5f5f5]">
+      <div className="relative z-10 h-1 bg-[#f5f5f5]">
         <div
           className="h-full bg-[#e31c1c] transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-12">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-12">
         <div className="w-full max-w-xl relative overflow-hidden">
           <AnimatePresence mode="wait">
             {/* STEP 1 - NAME */}
@@ -202,7 +195,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
               </motion.div>
             )}
 
-            {/* STEP 2 - CONTACT */}
+            {/* STEP 2 - EMAIL */}
             {step === 2 && (
               <motion.div
                 key="s2"
@@ -216,57 +209,22 @@ const Apply = ({ onBack, onComplete }: Props) => {
                 <div>
                   <p className="text-sm text-[#e31c1c] font-semibold mb-2">2 → 5</p>
                   <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
-                    ¿Cuál es tu WhatsApp / email?
+                    ¿Cuál es tu email?
                   </h2>
+                  <p className="mt-2 text-sm text-[#6b7280]">
+                    Te contactaremos aquí con los siguientes pasos.
+                  </p>
                 </div>
 
-                <div className="flex gap-2 mb-3">
-                  <button
-                    onClick={() => setContactType("phone")}
-                    className={`px-4 py-2 rounded-md text-sm font-semibold transition ${
-                      contactType === "phone"
-                        ? "bg-[#e31c1c] text-white"
-                        : "bg-[#f5f5f5] text-[#6b7280] hover:bg-[#e5e7eb]"
-                    }`}
-                  >
-                    📱 WhatsApp
-                  </button>
-                  <button
-                    onClick={() => setContactType("email")}
-                    className={`px-4 py-2 rounded-md text-sm font-semibold transition ${
-                      contactType === "email"
-                        ? "bg-[#e31c1c] text-white"
-                        : "bg-[#f5f5f5] text-[#6b7280] hover:bg-[#e5e7eb]"
-                    }`}
-                  >
-                    ✉️ Email
-                  </button>
-                </div>
-
-                {contactType === "phone" ? (
-                  <div className="flex items-center gap-2 border-b-2 border-[#e5e7eb] focus-within:border-[#e31c1c] transition">
-                    <span className="text-2xl py-3 text-[#0a0a0a]">🇪🇸 +34</span>
-                    <input
-                      type="tel"
-                      autoFocus
-                      placeholder="600 000 000"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && canNext2 && next()}
-                      className="flex-1 bg-transparent text-2xl py-3 focus:outline-none"
-                    />
-                  </div>
-                ) : (
-                  <input
-                    type="email"
-                    autoFocus
-                    placeholder="tu@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && canNext2 && next()}
-                    className="w-full border-b-2 border-[#e5e7eb] bg-transparent text-2xl py-3 focus:outline-none focus:border-[#e31c1c] transition"
-                  />
-                )}
+                <input
+                  type="email"
+                  autoFocus
+                  placeholder="tu@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && canNext2 && next()}
+                  className="w-full border-b-2 border-[#e5e7eb] bg-transparent text-2xl py-3 focus:outline-none focus:border-[#e31c1c] transition"
+                />
 
                 <button
                   disabled={!canNext2}
@@ -445,7 +403,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
                   Enviando tu aplicación…
                 </p>
                 <p className="mt-2 text-sm text-[#6b7280]">
-                  ✓ Datos recibidos correctamente
+                  Datos recibidos correctamente
                 </p>
               </motion.div>
             )}
