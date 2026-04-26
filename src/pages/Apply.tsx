@@ -1,49 +1,127 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export type BudgetTag = "downsell" | "base" | "anual" | "llamada";
 
 type Props = {
   onBack: () => void;
-  onComplete: (tag: BudgetTag) => void;
+  onComplete: (data: { name: string; budget: BudgetTag }) => void;
   initialPlan?: "base" | "anual" | null;
 };
 
-const situations = [
-  "Nunca he vendido nada online",
-  "He vendido alguna vez pero sin sistema",
-  "Ya vendo de forma regular y quiero escalar",
-  "Tengo tienda montada pero me falta formación",
+const WEBHOOK_URL =
+  "https://automatizacion.zonnet.es/webhook/66c1932f-6140-4473-91d3-d1b63de5b0a0";
+const STORAGE_KEY = "ecom_loian_form_progress";
+
+const problemOptions = [
+  "No tengo un proceso claro de ventas",
+  "Tengo tráfico pero no convierte",
+  "Mis ofertas no son irresistibles",
+  "Escalar, pero sin saber cómo",
+  "No sé por dónde empezar",
 ];
 
-const budgets: { label: string; tag: BudgetTag }[] = [
-  { label: "Menos de €100", tag: "downsell" },
-  { label: "€100–€300", tag: "base" },
-  { label: "€300–€1.000", tag: "anual" },
-  { label: "Más de €1.000", tag: "llamada" },
+const capitalOptions: { label: string; tag: BudgetTag }[] = [
+  { label: "Menos de 50€ (versión light)", tag: "downsell" },
+  { label: "Entre 200 y 500€ (solución media)", tag: "base" },
+  { label: "Entre 500€ y 2000€ (solución premium + mentoring)", tag: "anual" },
+  { label: "Sin presupuesto ahora (solo info)", tag: "downsell" },
 ];
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 
-const Apply = ({ onBack, onComplete, initialPlan }: Props) => {
+type ContactType = "phone" | "email";
+
+const Apply = ({ onBack, onComplete }: Props) => {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
-  const [city, setCity] = useState("");
-  const [situation, setSituation] = useState<string | null>(null);
-  const [budget, setBudget] = useState<BudgetTag | null>(
-    initialPlan === "anual" ? "anual" : initialPlan === "base" ? "base" : null
-  );
+  const [contactType, setContactType] = useState<ContactType>("phone");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [problem, setProblem] = useState<string | null>(null);
+  const [capital, setCapital] = useState<{ label: string; tag: BudgetTag } | null>(null);
+  const [urgency, setUrgency] = useState(7);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const next = () => setStep((s) => Math.min(TOTAL_STEPS, s + 1));
+  // Load saved progress
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.name) setName(d.name);
+        if (d.phone) setPhone(d.phone);
+        if (d.email) setEmail(d.email);
+        if (d.contactType) setContactType(d.contactType);
+        if (d.problem) setProblem(d.problem);
+        if (d.capital) setCapital(d.capital);
+        if (typeof d.urgency === "number") setUrgency(d.urgency);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
-  const submit = () => {
-    setStep(4);
-    setTimeout(() => {
-      if (budget) onComplete(budget);
-    }, 1500);
+  // Save on changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ name, phone, email, contactType, problem, capital, urgency })
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [name, phone, email, contactType, problem, capital, urgency]);
+
+  const next = () => setStep((s) => Math.min(TOTAL_STEPS + 1, s + 1));
+
+  const sendToWebhook = async () => {
+    const contacto = contactType === "phone" ? `+34 ${phone}` : email;
+    const payload = {
+      nombre: name.trim(),
+      contacto,
+      problema: problem,
+      capital: capital?.label ?? null,
+      urgencia: urgency,
+      timestamp: new Date().toISOString(),
+      fuente: "typeform_loian",
+    };
+
+    const res = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      mode: "no-cors", // webhook may not allow CORS; avoid hard fail
+    });
+    return res;
   };
 
-  const progress = (step / TOTAL_STEPS) * 100;
+  const submit = async () => {
+    setError(null);
+    setSubmitting(true);
+    setStep(6);
+    try {
+      await sendToWebhook();
+      // small delay so the loading shows
+      await new Promise((r) => setTimeout(r, 1200));
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+      onComplete({ name: name.trim(), budget: capital!.tag });
+    } catch (e) {
+      console.error("Webhook error", e);
+      setError("Parece que hubo un error. Intenta de nuevo.");
+      setStep(5);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const progress = (Math.min(step, TOTAL_STEPS) / TOTAL_STEPS) * 100;
 
   const variants = {
     enter: { opacity: 0, x: 40 },
@@ -51,8 +129,18 @@ const Apply = ({ onBack, onComplete, initialPlan }: Props) => {
     exit: { opacity: 0, x: -40 },
   };
 
+  const validEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  const validPhone = (v: string) => v.replace(/\D/g, "").length >= 9;
+
+  const canNext1 = name.trim().length >= 3;
+  const canNext2 =
+    contactType === "phone" ? validPhone(phone) : validEmail(email);
+  const canNext3 = !!problem;
+  const canNext4 = !!capital;
+  const canSubmit = urgency >= 1 && urgency <= 10;
+
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col font-sans">
       {/* Header */}
       <header className="border-b border-[#e5e7eb] px-4 sm:px-6 py-4 flex items-center justify-between">
         <a href="#" className="font-extrabold text-lg">
@@ -76,18 +164,9 @@ const Apply = ({ onBack, onComplete, initialPlan }: Props) => {
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-12">
-        <div className="w-full max-w-xl text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0a0a0a]">
-            Antes de entrar, cuéntanos un poco
-          </h1>
-          <p className="mt-3 text-[#6b7280]">
-            Este formulario nos ayuda a orientarte al plan que más encaja con tu situación. Tarda 2
-            minutos.
-          </p>
-        </div>
-
         <div className="w-full max-w-xl relative overflow-hidden">
           <AnimatePresence mode="wait">
+            {/* STEP 1 - NAME */}
             {step === 1 && (
               <motion.div
                 key="s1"
@@ -96,35 +175,34 @@ const Apply = ({ onBack, onComplete, initialPlan }: Props) => {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.3 }}
-                className="space-y-4"
+                className="space-y-6"
               >
-                <h2 className="text-xl font-bold text-[#0a0a0a]">
-                  ¿Cómo te llamas y de dónde eres?
-                </h2>
+                <div>
+                  <p className="text-sm text-[#e31c1c] font-semibold mb-2">1 → 5</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                    ¿Cuál es tu nombre?
+                  </h2>
+                </div>
                 <input
                   type="text"
-                  placeholder="Nombre completo"
+                  autoFocus
+                  placeholder="Tu nombre completo"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full border border-[#e5e7eb] rounded-lg px-4 py-3 focus:outline-none focus:border-[#e31c1c]"
-                />
-                <input
-                  type="text"
-                  placeholder="Ciudad y país"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="w-full border border-[#e5e7eb] rounded-lg px-4 py-3 focus:outline-none focus:border-[#e31c1c]"
+                  onKeyDown={(e) => e.key === "Enter" && canNext1 && next()}
+                  className="w-full border-b-2 border-[#e5e7eb] bg-transparent text-2xl py-3 focus:outline-none focus:border-[#e31c1c] transition"
                 />
                 <button
-                  disabled={!name.trim() || !city.trim()}
+                  disabled={!canNext1}
                   onClick={next}
-                  className="w-full bg-[#e31c1c] text-white font-bold py-3 rounded-lg disabled:opacity-40 hover:brightness-90 transition"
+                  className="bg-[#e31c1c] text-white font-bold py-3 px-8 rounded-lg disabled:opacity-40 hover:brightness-90 transition"
                 >
                   Siguiente →
                 </button>
               </motion.div>
             )}
 
+            {/* STEP 2 - CONTACT */}
             {step === 2 && (
               <motion.div
                 key="s2"
@@ -133,36 +211,74 @@ const Apply = ({ onBack, onComplete, initialPlan }: Props) => {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.3 }}
-                className="space-y-3"
+                className="space-y-6"
               >
-                <h2 className="text-xl font-bold text-[#0a0a0a]">
-                  ¿Cuál es tu situación actual con la reventa?
-                </h2>
-                <div className="space-y-2">
-                  {situations.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setSituation(s)}
-                      className={`w-full text-left border rounded-lg px-4 py-3 transition ${
-                        situation === s
-                          ? "border-[#e31c1c] bg-[#fff5f5]"
-                          : "border-[#0a0a0a] bg-white hover:border-[#e31c1c]"
-                      }`}
-                    >
-                      {s}
-                    </button>
-                  ))}
+                <div>
+                  <p className="text-sm text-[#e31c1c] font-semibold mb-2">2 → 5</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                    ¿Cuál es tu WhatsApp / email?
+                  </h2>
                 </div>
+
+                <div className="flex gap-2 mb-3">
+                  <button
+                    onClick={() => setContactType("phone")}
+                    className={`px-4 py-2 rounded-md text-sm font-semibold transition ${
+                      contactType === "phone"
+                        ? "bg-[#e31c1c] text-white"
+                        : "bg-[#f5f5f5] text-[#6b7280] hover:bg-[#e5e7eb]"
+                    }`}
+                  >
+                    📱 WhatsApp
+                  </button>
+                  <button
+                    onClick={() => setContactType("email")}
+                    className={`px-4 py-2 rounded-md text-sm font-semibold transition ${
+                      contactType === "email"
+                        ? "bg-[#e31c1c] text-white"
+                        : "bg-[#f5f5f5] text-[#6b7280] hover:bg-[#e5e7eb]"
+                    }`}
+                  >
+                    ✉️ Email
+                  </button>
+                </div>
+
+                {contactType === "phone" ? (
+                  <div className="flex items-center gap-2 border-b-2 border-[#e5e7eb] focus-within:border-[#e31c1c] transition">
+                    <span className="text-2xl py-3 text-[#0a0a0a]">🇪🇸 +34</span>
+                    <input
+                      type="tel"
+                      autoFocus
+                      placeholder="600 000 000"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && canNext2 && next()}
+                      className="flex-1 bg-transparent text-2xl py-3 focus:outline-none"
+                    />
+                  </div>
+                ) : (
+                  <input
+                    type="email"
+                    autoFocus
+                    placeholder="tu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && canNext2 && next()}
+                    className="w-full border-b-2 border-[#e5e7eb] bg-transparent text-2xl py-3 focus:outline-none focus:border-[#e31c1c] transition"
+                  />
+                )}
+
                 <button
-                  disabled={!situation}
+                  disabled={!canNext2}
                   onClick={next}
-                  className="w-full bg-[#e31c1c] text-white font-bold py-3 rounded-lg disabled:opacity-40 hover:brightness-90 transition"
+                  className="bg-[#e31c1c] text-white font-bold py-3 px-8 rounded-lg disabled:opacity-40 hover:brightness-90 transition"
                 >
                   Siguiente →
                 </button>
               </motion.div>
             )}
 
+            {/* STEP 3 - PROBLEM */}
             {step === 3 && (
               <motion.div
                 key="s3"
@@ -171,36 +287,46 @@ const Apply = ({ onBack, onComplete, initialPlan }: Props) => {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.3 }}
-                className="space-y-3"
+                className="space-y-6"
               >
-                <h2 className="text-xl font-bold text-[#0a0a0a]">
-                  ¿Con qué presupuesto cuentas para invertir en la comunidad?
-                </h2>
+                <div>
+                  <p className="text-sm text-[#e31c1c] font-semibold mb-2">3 → 5</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                    ¿Cuál es tu mayor reto AHORA?
+                  </h2>
+                </div>
                 <div className="space-y-2">
-                  {budgets.map((b) => (
+                  {problemOptions.map((p, i) => (
                     <button
-                      key={b.tag}
-                      onClick={() => setBudget(b.tag)}
-                      className={`w-full text-left border rounded-lg px-4 py-3 transition ${
-                        budget === b.tag
+                      key={p}
+                      onClick={() => {
+                        setProblem(p);
+                        setTimeout(next, 250);
+                      }}
+                      className={`w-full text-left border-2 rounded-lg px-4 py-4 transition flex items-center gap-3 ${
+                        problem === p
                           ? "border-[#e31c1c] bg-[#fff5f5]"
-                          : "border-[#0a0a0a] bg-white hover:border-[#e31c1c]"
+                          : "border-[#e5e7eb] bg-white hover:border-[#0a0a0a]"
                       }`}
                     >
-                      {b.label}
+                      <span className="w-6 h-6 rounded border border-[#e5e7eb] flex items-center justify-center text-xs font-bold text-[#6b7280]">
+                        {String.fromCharCode(65 + i)}
+                      </span>
+                      <span className="text-[#0a0a0a]">{p}</span>
                     </button>
                   ))}
                 </div>
                 <button
-                  disabled={!budget}
-                  onClick={submit}
-                  className="w-full bg-[#e31c1c] text-white font-bold py-3 rounded-lg disabled:opacity-40 hover:brightness-90 transition"
+                  disabled={!canNext3}
+                  onClick={next}
+                  className="bg-[#e31c1c] text-white font-bold py-3 px-8 rounded-lg disabled:opacity-40 hover:brightness-90 transition"
                 >
-                  Enviar aplicación →
+                  Siguiente →
                 </button>
               </motion.div>
             )}
 
+            {/* STEP 4 - CAPITAL */}
             {step === 4 && (
               <motion.div
                 key="s4"
@@ -209,19 +335,125 @@ const Apply = ({ onBack, onComplete, initialPlan }: Props) => {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.3 }}
-                className="text-center py-12"
+                className="space-y-6"
+              >
+                <div>
+                  <p className="text-sm text-[#e31c1c] font-semibold mb-2">4 → 5</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                    ¿Cuánto capital estás dispuesto a invertir en solucionar esto?
+                  </h2>
+                </div>
+                <div className="space-y-2">
+                  {capitalOptions.map((c, i) => (
+                    <button
+                      key={c.label}
+                      onClick={() => {
+                        setCapital(c);
+                        setTimeout(next, 250);
+                      }}
+                      className={`w-full text-left border-2 rounded-lg px-4 py-4 transition flex items-center gap-3 ${
+                        capital?.label === c.label
+                          ? "border-[#e31c1c] bg-[#fff5f5]"
+                          : "border-[#e5e7eb] bg-white hover:border-[#0a0a0a]"
+                      }`}
+                    >
+                      <span className="w-6 h-6 rounded border border-[#e5e7eb] flex items-center justify-center text-xs font-bold text-[#6b7280]">
+                        {i + 1}
+                      </span>
+                      <span className="text-[#0a0a0a]">{c.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <button
+                  disabled={!canNext4}
+                  onClick={next}
+                  className="bg-[#e31c1c] text-white font-bold py-3 px-8 rounded-lg disabled:opacity-40 hover:brightness-90 transition"
+                >
+                  Siguiente →
+                </button>
+              </motion.div>
+            )}
+
+            {/* STEP 5 - URGENCY SLIDER */}
+            {step === 5 && (
+              <motion.div
+                key="s5"
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="space-y-8"
+              >
+                <div>
+                  <p className="text-sm text-[#e31c1c] font-semibold mb-2">5 → 5</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                    ¿Qué tan urgente es resolver esto?
+                  </h2>
+                </div>
+
+                <div className="text-center">
+                  <div className="text-7xl font-extrabold text-[#e31c1c] mb-2">
+                    {urgency}
+                  </div>
+                  <p className="text-sm text-[#6b7280]">de 10</p>
+                </div>
+
+                <div className="px-2">
+                  <input
+                    type="range"
+                    min={1}
+                    max={10}
+                    step={1}
+                    value={urgency}
+                    onChange={(e) => setUrgency(parseInt(e.target.value, 10))}
+                    className="w-full accent-[#e31c1c]"
+                  />
+                  <div className="flex justify-between text-xs text-[#6b7280] mt-2">
+                    <span>1 — Puedo esperar</span>
+                    <span>10 — Lo necesito ASAP</span>
+                  </div>
+                </div>
+
+                {error && (
+                  <p className="text-sm text-[#e31c1c] text-center">{error}</p>
+                )}
+
+                <button
+                  disabled={!canSubmit || submitting}
+                  onClick={submit}
+                  className="w-full bg-[#e31c1c] text-white font-bold py-4 rounded-lg disabled:opacity-40 hover:brightness-90 transition text-lg"
+                >
+                  {error ? "Reintentar" : "Enviar →"}
+                </button>
+              </motion.div>
+            )}
+
+            {/* STEP 6 - LOADING */}
+            {step === 6 && (
+              <motion.div
+                key="s6"
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="text-center py-16"
               >
                 <div className="w-12 h-12 mx-auto border-4 border-[#e5e7eb] border-t-[#e31c1c] rounded-full animate-spin" />
-                <p className="mt-6 text-[#0a0a0a] font-medium">
-                  Procesando tu aplicación…
+                <p className="mt-6 text-[#0a0a0a] font-medium text-lg">
+                  Enviando tu aplicación…
+                </p>
+                <p className="mt-2 text-sm text-[#6b7280]">
+                  ✓ Datos recibidos correctamente
                 </p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        <p className="mt-8 text-xs text-[#6b7280]">
-          Paso {step} de {TOTAL_STEPS}
+        <p className="mt-12 text-xs text-[#6b7280]">
+          Paso {Math.min(step, TOTAL_STEPS)} de {TOTAL_STEPS}
         </p>
       </div>
     </div>
