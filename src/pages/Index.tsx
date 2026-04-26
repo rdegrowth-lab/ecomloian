@@ -7,7 +7,7 @@ import Benefits from "@/components/landing/Benefits";
 import FocusRail from "@/components/landing/FocusRail";
 import FomoBlock from "@/components/landing/FomoBlock";
 import Testimonials from "@/components/landing/Testimonials";
-import Pricing from "@/components/landing/Pricing";
+import CinematicCTA from "@/components/landing/CinematicCTA";
 import Faq from "@/components/landing/Faq";
 import Footer from "@/components/landing/Footer";
 import Apply, { BudgetTag } from "./Apply";
@@ -68,11 +68,10 @@ const moduloItems = [
 
 const Index = () => {
   const [view, setView] = useState<View>("home");
-  const [selectedPlan, setSelectedPlan] = useState<"base" | "anual" | null>(null);
   const [budgetTag, setBudgetTag] = useState<BudgetTag | null>(null);
+  const [userName, setUserName] = useState<string>("");
 
-  const goApply = (plan?: "base" | "anual") => {
-    setSelectedPlan(plan ?? null);
+  const goApply = () => {
     setView("aplicar");
     window.scrollTo({ top: 0 });
   };
@@ -81,25 +80,25 @@ const Index = () => {
     return (
       <Apply
         onBack={() => setView("home")}
-        onComplete={(tag) => {
-          setBudgetTag(tag);
+        onComplete={({ name, budget }) => {
+          setUserName(name);
+          setBudgetTag(budget);
           setView("gracias");
           window.scrollTo({ top: 0 });
         }}
-        initialPlan={selectedPlan}
       />
     );
   }
 
   if (view === "gracias" && budgetTag) {
-    return <Thanks tag={budgetTag} onBack={() => setView("home")} />;
+    return <Thanks tag={budgetTag} name={userName} onBack={() => setView("home")} />;
   }
 
   return (
     <main className="min-h-screen bg-white text-[#0a0a0a]">
       <AnnouncementBar />
-      <StickyNav onApply={() => goApply()} />
-      <Hero onApply={() => goApply()} />
+      <StickyNav onApply={goApply} />
+      <Hero onApply={goApply} />
       <Ticker />
       <Benefits />
 
@@ -116,7 +115,7 @@ const Index = () => {
 
       <FomoBlock />
       <Testimonials />
-      <Pricing onApply={(plan) => goApply(plan)} />
+      <CinematicCTA onApply={goApply} />
       <Faq />
       <Footer />
     </main>
