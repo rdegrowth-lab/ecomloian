@@ -1,88 +1,101 @@
 import { Check } from "lucide-react";
 
+type Props = { onApply: (plan?: "base" | "anual") => void };
+
 const baseFeatures = [
   "Formación completa en 6 módulos",
-  "Acceso a la comunidad privada",
   "Lista de proveedores verificados",
-  "Feed de miembros y soporte",
+  "Acceso a la comunidad privada",
   'Sección "Ofertas del día"',
   "Bolsa de trabajo interna",
+  "Soporte entre miembros",
 ];
 
 const proFeatures = [
   "Todo lo del plan base",
-  "Calls grupales mensuales con Loian",
+  "Calls grupales mensuales en directo con Loian",
   "Grabaciones de todas las calls anteriores",
-  "Retroalimentación directa de Loian",
-  "Acceso prioritario a novedades",
+  "Feedback directo de Loian en la comunidad",
+  "Acceso prioritario a novedades y proveedores nuevos",
   "Precio bloqueado de por vida",
 ];
 
-const Pricing = () => {
+const Pricing = ({ onApply }: Props) => {
   return (
-    <section id="pricing" className="px-4 sm:px-6 py-20 max-w-6xl mx-auto">
+    <section id="pricing" className="px-4 sm:px-6 py-20 max-w-5xl mx-auto bg-white">
       <div className="text-center mb-12">
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Elige tu acceso</h2>
-        <p className="mt-3 text-[hsl(var(--brand-muted))] max-w-xl mx-auto">
-          Sin contratos. El precio actual está garantizado mientras mantengas tu plaza activa.
+        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0a0a0a]">
+          Elige tu acceso
+        </h2>
+        <p className="mt-3 text-[#6b7280] max-w-xl mx-auto">
+          El precio está garantizado mientras mantengas tu plaza. Si cancelas, vuelves al precio
+          vigente.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <div className="grid md:grid-cols-2 gap-6 max-w-[800px] mx-auto">
         {/* Base */}
-        <div className="bg-card border border-border rounded-2xl p-7 flex flex-col">
-          <span className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--brand-muted))]">
+        <div className="bg-[#f5f5f5] border border-[#e5e7eb] border-t-4 border-t-[#0a0a0a] rounded-xl p-7 flex flex-col">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#0a0a0a]">
             Acceso base
           </span>
-          <h3 className="mt-4 text-xl font-bold text-white">Comunidad + Formación</h3>
+          <h3 className="mt-4 text-xl font-bold text-[#0a0a0a]">Comunidad + Formación</h3>
           <div className="mt-5">
-            <span className="text-5xl font-extrabold text-white">€297</span>
-            <span className="text-[hsl(var(--brand-muted))]"> / trimestre</span>
-            <p className="text-sm text-[hsl(var(--brand-muted))] mt-1">o €99/mes · Cancela cuando quieras</p>
+            <span className="text-5xl font-extrabold text-[#0a0a0a]">€297</span>
+            <span className="text-[#6b7280]"> / trimestre</span>
+            <p className="text-sm text-[#6b7280] mt-1">≈ €99/mes · cancela cuando quieras</p>
           </div>
           <ul className="mt-6 space-y-3 flex-1">
             {baseFeatures.map((f) => (
-              <li key={f} className="flex items-start gap-2 text-sm text-white/90">
-                <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+              <li key={f} className="flex items-start gap-2 text-sm text-[#0a0a0a]">
+                <Check className="w-4 h-4 text-[#e31c1c] mt-0.5 shrink-0" />
                 <span>{f}</span>
               </li>
             ))}
           </ul>
-          <button className="mt-7 w-full bg-primary text-primary-foreground font-semibold py-3 rounded-lg hover:brightness-90 transition">
-            Empezar ahora →
+          <button
+            onClick={() => onApply("base")}
+            className="mt-7 w-full bg-[#0a0a0a] hover:bg-[#333] text-white font-semibold py-3 rounded-lg transition"
+          >
+            Aplicar al acceso base →
           </button>
         </div>
 
         {/* Featured */}
-        <div className="relative bg-card border-2 border-primary rounded-2xl p-7 flex flex-col shadow-[0_0_60px_hsl(var(--primary)/0.15)]">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
-            ⭐ MÁS POPULAR
+        <div className="relative bg-white border-2 border-[#e31c1c] rounded-xl p-7 flex flex-col">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#e31c1c] text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
+            ⭐ MÁS COMPLETO
           </div>
-          <span className="text-xs font-bold uppercase tracking-wider text-primary">
-            Sistema completo anual
+          <span className="text-xs font-bold uppercase tracking-wider text-[#e31c1c]">
+            Sistema anual con calls
           </span>
-          <h3 className="mt-4 text-xl font-bold text-white">Comunidad + Calls con Loian</h3>
+          <h3 className="mt-4 text-xl font-bold text-[#0a0a0a]">Comunidad + Calls con Loian</h3>
           <div className="mt-5">
-            <div className="flex items-baseline gap-3">
-              <span className="text-[hsl(var(--brand-muted))] line-through text-lg">€1.200</span>
-              <span className="text-5xl font-extrabold text-white">€997</span>
-              <span className="text-[hsl(var(--brand-muted))]"> / año</span>
+            <div className="flex items-baseline gap-3 flex-wrap">
+              <span className="text-[#6b7280] line-through text-lg">€1.200/año</span>
+              <span className="text-5xl font-extrabold text-[#e31c1c]">€997</span>
+              <span className="text-[#6b7280]">/ año</span>
             </div>
-            <p className="text-sm text-[hsl(var(--brand-muted))] mt-1">Ahorras €203 vs pago trimestral</p>
+            <p className="text-sm text-green-600 font-medium mt-1">
+              Ahorras €203 vs pago trimestral
+            </p>
           </div>
           <ul className="mt-6 space-y-3 flex-1">
             {proFeatures.map((f, i) => (
-              <li key={f} className="flex items-start gap-2 text-sm text-white/90">
-                <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+              <li key={f} className="flex items-start gap-2 text-sm text-[#0a0a0a]">
+                <Check className="w-4 h-4 text-[#e31c1c] mt-0.5 shrink-0" />
                 <span className={i === 1 || i === 5 ? "font-semibold" : ""}>{f}</span>
               </li>
             ))}
           </ul>
-          <button className="mt-7 w-full bg-primary text-primary-foreground font-bold py-4 rounded-lg text-base hover:brightness-90 transition">
-            Reservar mi plaza →
+          <button
+            onClick={() => onApply("anual")}
+            className="mt-7 w-full bg-[#e31c1c] hover:brightness-90 text-white font-bold py-4 rounded-lg text-base transition"
+          >
+            Aplicar al plan anual →
           </button>
-          <p className="mt-3 text-xs text-center text-[hsl(var(--brand-muted))]">
-            🔒 Solo quedan plazas limitadas este mes
+          <p className="mt-3 text-xs text-center text-[#6b7280]">
+            🔒 Plazas limitadas en este lanzamiento
           </p>
         </div>
       </div>
