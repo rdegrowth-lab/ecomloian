@@ -36,11 +36,13 @@ const Faq = () => {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="px-4 sm:px-6 py-20 max-w-3xl mx-auto bg-white">
+    <section className="relative bg-white overflow-hidden px-4 sm:px-6 py-20">
+      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-50" />
+      <div className="relative z-10 max-w-3xl mx-auto">
       <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0a0a0a] text-center mb-10">
         Preguntas frecuentes
       </h2>
-      <div className="divide-y divide-[#e5e7eb] border-y border-[#e5e7eb]">
+      <div className="divide-y divide-[#e5e7eb] border-y border-[#e5e7eb] bg-white/60 backdrop-blur-sm rounded-lg">
         {faqs.map((f, i) => {
           const isOpen = open === i;
           return (
@@ -74,6 +76,7 @@ const Faq = () => {
             </div>
           );
         })}
+      </div>
       </div>
     </section>
   );

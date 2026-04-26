@@ -9,8 +9,10 @@ const items = [
 
 const FomoBlock = () => {
   return (
-    <section className="bg-white border-y border-[#e5e7eb] py-16 px-4 sm:px-6">
-      <div className="max-w-2xl mx-auto text-center">
+    <section className="relative bg-white border-y border-[#e5e7eb] py-16 px-4 sm:px-6 overflow-hidden">
+      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-50" />
+      <div className="absolute top-1/2 left-1/2 w-[60vw] h-[60vw] max-w-[600px] max-h-[600px] bg-aurora-red animate-aurora-breathe pointer-events-none opacity-60" />
+      <div className="relative z-10 max-w-2xl mx-auto text-center">
         <h2 className="text-2xl sm:text-[32px] font-bold text-[#0a0a0a] tracking-tight">
           ¿Qué pierdes si cancelas?
         </h2>
