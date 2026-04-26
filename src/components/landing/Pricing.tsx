@@ -8,15 +8,14 @@ const baseFeatures = [
   "Acceso a la comunidad privada",
   'Sección "Ofertas del día"',
   "Bolsa de trabajo interna",
-  "Soporte entre miembros",
 ];
 
 const proFeatures = [
   "Todo lo del plan base",
-  "Calls grupales mensuales en directo con Loian",
+  "Calls grupales mensuales con Loian",
   "Grabaciones de todas las calls anteriores",
   "Feedback directo de Loian en la comunidad",
-  "Acceso prioritario a novedades y proveedores nuevos",
+  "Acceso prioritario a nuevos proveedores",
   "Precio bloqueado de por vida",
 ];
 
@@ -28,14 +27,13 @@ const Pricing = ({ onApply }: Props) => {
           Elige tu acceso
         </h2>
         <p className="mt-3 text-[#6b7280] max-w-xl mx-auto">
-          El precio está garantizado mientras mantengas tu plaza. Si cancelas, vuelves al precio
-          vigente.
+          El precio actual está garantizado mientras mantengas tu plaza activa.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 max-w-[800px] mx-auto">
+      <div className="grid md:grid-cols-2 gap-6 max-w-[860px] mx-auto">
         {/* Base */}
-        <div className="bg-[#f5f5f5] border border-[#e5e7eb] border-t-4 border-t-[#0a0a0a] rounded-xl p-7 flex flex-col">
+        <div className="bg-[#f9f9f9] border border-[#e5e7eb] rounded-xl p-7 flex flex-col">
           <span className="text-xs font-bold uppercase tracking-wider text-[#0a0a0a]">
             Acceso base
           </span>

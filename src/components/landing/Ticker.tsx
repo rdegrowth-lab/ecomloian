@@ -5,9 +5,9 @@ const items = [
   "Comunidad privada",
   "Bolsa de trabajo interna",
   "Ofertas exclusivas del día",
-  "Sin letra pequeña",
   "Soporte entre miembros",
-  "Actualizaciones constantes",
+  "Sin letra pequeña",
+  "Acceso inmediato",
   "Solo para los que ejecutan",
 ];
 

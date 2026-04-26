@@ -2,12 +2,34 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const faqs = [
-  { q: "¿Qué pasa si me doy de baja?", a: "Pierdes el acceso inmediatamente a todo: formación, proveedores, comunidad y la sección de ofertas. Si quieres volver, entras al precio vigente en ese momento." },
-  { q: "¿Es para mí si no he vendido nada nunca?", a: "Sí. El módulo 1 empieza desde cero absoluto. Pero si ya estás vendiendo, saltas directamente al módulo que necesites." },
-  { q: "¿Qué diferencia hay entre los dos planes?", a: "El base da acceso a toda la formación y la comunidad. El anual añade las calls grupales mensuales con Loian, donde puedes exponer tu situación directamente." },
-  { q: "¿Los proveedores son fiables?", a: "Loian los usa personalmente. Son proveedores verificados con pedidos reales hechos. La lista se actualiza cuando aparecen proveedores nuevos o se descarta alguno." },
-  { q: "¿Puedo cambiar de plan más adelante?", a: "Sí. Si empiezas en base y quieres subir al anual, puedes hacerlo. Se descuenta lo ya pagado proporcionalmente." },
-  { q: "¿Por qué no puedo comprar directamente?", a: "Porque queremos asegurarnos de que la comunidad encaja contigo y tú con ella. El formulario tarda 2 minutos y te orienta al mejor plan para tu situación." },
+  {
+    q: "¿Qué pasa si me doy de baja?",
+    a: "Pierdes el acceso inmediatamente a todo. Si vuelves, entras al precio vigente, que puede ser mayor.",
+  },
+  {
+    q: "¿Es para mí si no he vendido nada nunca?",
+    a: "Sí. El módulo 1 empieza desde cero. Si ya vendes, saltas directamente al módulo que necesites.",
+  },
+  {
+    q: "¿Qué diferencia hay entre los dos planes?",
+    a: "El base da acceso a toda la formación y la comunidad. El anual añade las calls grupales con Loian.",
+  },
+  {
+    q: "¿Cuándo son las calls grupales?",
+    a: "Una vez al mes, en directo. Se graban y las grabaciones quedan en la comunidad. Solo plan anual.",
+  },
+  {
+    q: "¿Los proveedores son de España?",
+    a: "La lista incluye proveedores españoles y europeos. Algunos permiten pago contra reembolso.",
+  },
+  {
+    q: "¿Por qué no puedo comprar directamente?",
+    a: "Queremos asegurarnos de que la comunidad encaja contigo. El formulario tarda 2 minutos.",
+  },
+  {
+    q: "¿Hay garantía?",
+    a: "Sí. Si en los primeros 7 días no ves el valor, te devolvemos el dinero sin preguntas.",
+  },
 ];
 
 const Faq = () => {

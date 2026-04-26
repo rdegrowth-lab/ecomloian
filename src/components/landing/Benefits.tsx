@@ -1,62 +1,62 @@
-const benefits = [
+import { Package, Handshake, MessageCircle, Phone, Trophy, Lock, LucideIcon } from "lucide-react";
+
+type Item = { Icon: LucideIcon; title: string; desc: string };
+
+const items: Item[] = [
   {
-    icon: "📦",
-    title: "Formación en 6 módulos",
-    desc: "Fundamentos, proveedores, tienda, logística, escalado y marca personal. Vas a tu ritmo. Sin caducidad.",
+    Icon: Package,
+    title: "Formación en vídeo completa",
+    desc: "6 módulos grabados: fundamentos, proveedores, tienda, logística, escalado y marca personal. Vas a tu ritmo, sin caducidad.",
   },
   {
-    icon: "🤝",
-    title: "Proveedores verificados y actualizados",
-    desc: "La lista de proveedores reales que Loian usa: ropa, zapatos, perfumes, tecnología, vapers. Actualizada cuando hay novedades.",
+    Icon: Handshake,
+    title: "Proveedores reales y verificados",
+    desc: "La lista de proveedores que Loian usa personalmente: ropa, zapatos, perfumes, tecnología, vapers. Actualizada con novedades.",
   },
   {
-    icon: "💬",
-    title: "Comunidad activa — no un grupo muerto",
-    desc: "Feed diario donde los miembros comparten ventas, dudas, logros y oportunidades. Hay gente dentro ahora mismo.",
+    Icon: MessageCircle,
+    title: "Comunidad activa 24/7",
+    desc: "Feed diario donde los miembros comparten ventas, dudas, logros y oportunidades. No es un grupo muerto.",
   },
   {
-    icon: "📞",
-    title: "Calls grupales mensuales (plan anual)",
-    desc: "Una sesión en directo al mes con Loian. Expones tu caso, recibes feedback real. Grabadas para quien no puede en directo.",
+    Icon: Phone,
+    title: "Calls grupales mensuales con Loian",
+    desc: "Sesiones en directo cada mes. Expones tu caso, recibes feedback real. Solo plan anual. Grabadas.",
   },
   {
-    icon: "🏆",
+    Icon: Trophy,
     title: "Bolsa de trabajo interna",
     desc: "Los miembros se contratan entre sí: fotos, gestión de pedidos, embalaje. Una economía dentro de la comunidad.",
   },
   {
-    icon: "🔒",
+    Icon: Lock,
     title: 'Sección "Ofertas del día"',
-    desc: "La sección más activa. Miembros comparten liquidaciones y oportunidades que no aparecen en ningún sitio más. Solo para miembros.",
+    desc: "Miembros comparten liquidaciones y oportunidades que no están en ningún sitio más. La sección más activa.",
   },
 ];
 
 const Benefits = () => {
   return (
-    <section className="px-4 sm:px-6 py-20 max-w-6xl mx-auto">
+    <section className="px-4 sm:px-6 py-20 max-w-5xl mx-auto bg-white">
       <div className="text-center max-w-2xl mx-auto mb-14">
-        <h2 className="text-3xl sm:text-[40px] font-bold tracking-tight text-[#0a0a0a] leading-tight">
-          No es un curso que compras y olvidas.
+        <h2 className="text-3xl sm:text-[36px] font-bold tracking-tight text-[#0a0a0a] leading-tight">
+          Todo lo que necesitas para ganar dinero revendiendo
         </h2>
-        <p className="mt-3 text-lg font-medium text-[#e31c1c]">
-          Es una comunidad activa donde la gente vende cada semana.
-        </p>
-        <p className="mt-5 text-[#0a0a0a] max-w-[600px] mx-auto leading-relaxed">
-          Dentro encuentras formación estructurada en vídeo, la lista de proveedores que Loian usa
-          personalmente, y un grupo de personas con tu mismo objetivo que se ayudan entre sí todos
-          los días. El valor crece cada semana que estás dentro.
+        <p className="mt-4 text-[#6b7280] max-w-[520px] mx-auto leading-relaxed">
+          Sin rodeos. Sin teoría vacía. Esto es lo que tienes desde el primer día.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
-        {benefits.map((b) => (
-          <div
-            key={b.title}
-            className="bg-[#f5f5f5] border-t-[3px] border-[#e31c1c] rounded-lg p-5 hover:scale-[1.02] transition-transform"
-          >
-            <div className="text-3xl mb-3">{b.icon}</div>
-            <h3 className="text-lg font-bold text-[#0a0a0a]">{b.title}</h3>
-            <p className="mt-2 text-sm text-[#6b7280] leading-relaxed">{b.desc}</p>
+      <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
+        {items.map(({ Icon, title, desc }) => (
+          <div key={title} className="flex gap-4">
+            <div className="shrink-0 w-10 h-10 rounded-lg bg-[#fff5f5] border border-[#fee2e2] flex items-center justify-center">
+              <Icon className="w-5 h-5 text-[#e31c1c]" strokeWidth={2.2} />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-[#0a0a0a]">{title}</h3>
+              <p className="mt-1.5 text-sm text-[#6b7280] leading-relaxed">{desc}</p>
+            </div>
           </div>
         ))}
       </div>
