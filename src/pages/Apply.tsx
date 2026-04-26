@@ -13,14 +13,14 @@ const situations = [
   "Nunca he vendido nada online",
   "He vendido alguna vez pero sin sistema",
   "Ya vendo de forma regular y quiero escalar",
-  "Tengo una tienda montada pero me falta formación",
+  "Tengo tienda montada pero me falta formación",
 ];
 
 const budgets: { label: string; tag: BudgetTag }[] = [
-  { label: "Menos de €100 — estoy empezando", tag: "downsell" },
-  { label: "Entre €100 y €300", tag: "base" },
-  { label: "Entre €300 y €1.000", tag: "anual" },
-  { label: "Más de €1.000 — quiero lo mejor", tag: "llamada" },
+  { label: "Menos de €100", tag: "downsell" },
+  { label: "€100–€300", tag: "base" },
+  { label: "€300–€1.000", tag: "anual" },
+  { label: "Más de €1.000", tag: "llamada" },
 ];
 
 const TOTAL_STEPS = 4;
@@ -213,7 +213,7 @@ const Apply = ({ onBack, onComplete, initialPlan }: Props) => {
               >
                 <div className="w-12 h-12 mx-auto border-4 border-[#e5e7eb] border-t-[#e31c1c] rounded-full animate-spin" />
                 <p className="mt-6 text-[#0a0a0a] font-medium">
-                  Estamos procesando tu aplicación…
+                  Procesando tu aplicación…
                 </p>
               </motion.div>
             )}
