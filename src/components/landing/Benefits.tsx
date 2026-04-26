@@ -37,7 +37,9 @@ const items: Item[] = [
 
 const Benefits = () => {
   return (
-    <section className="px-4 sm:px-6 py-20 max-w-5xl mx-auto bg-white">
+    <section className="relative bg-white overflow-hidden px-4 sm:px-6 py-20">
+      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-60" />
+      <div className="relative z-10 max-w-5xl mx-auto">
       <div className="text-center max-w-2xl mx-auto mb-14">
         <h2 className="text-3xl sm:text-[36px] font-bold tracking-tight text-[#0a0a0a] leading-tight">
           Todo lo que necesitas para ganar dinero revendiendo
@@ -59,6 +61,7 @@ const Benefits = () => {
             </div>
           </div>
         ))}
+      </div>
       </div>
     </section>
   );
