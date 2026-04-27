@@ -103,8 +103,31 @@ const HERO_STYLES = `
 .hero-vsl-frame {
   background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 100%);
   box-shadow:
-    0 30px 80px -20px rgba(10,10,10,0.18),
-    0 0 0 1px rgba(10,10,10,0.05);
+    0 40px 100px -20px rgba(10,10,10,0.25),
+    0 10px 30px -10px rgba(10,10,10,0.12),
+    0 0 0 1px rgba(10,10,10,0.06);
+}
+.hero-red-glow {
+  color: #e31c1c;
+  text-shadow:
+    0 0 20px rgba(227,28,28,0.45),
+    0 0 40px rgba(227,28,28,0.28),
+    0 2px 12px rgba(227,28,28,0.35);
+  animation: red-pulse 3.5s ease-in-out infinite;
+}
+@keyframes red-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 20px rgba(227,28,28,0.45),
+      0 0 40px rgba(227,28,28,0.28),
+      0 2px 12px rgba(227,28,28,0.35);
+  }
+  50% {
+    text-shadow:
+      0 0 28px rgba(227,28,28,0.6),
+      0 0 60px rgba(227,28,28,0.4),
+      0 2px 18px rgba(227,28,28,0.5);
+  }
 }
 `;
 
@@ -129,12 +152,13 @@ const Hero = ({ onApply }: Props) => {
 
         {/* Content */}
         <div className="relative z-10 max-w-3xl mx-auto text-center">
-          <span className="inline-block text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#e31c1c] mb-6">
-            ◉ Comunidad privada · Plazas limitadas
+          <span className="inline-block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-[#6b7280] mb-6">
+            Comunidad privada · Acceso por aplicación
           </span>
 
           <h1 className="text-[36px] sm:text-[56px] font-extrabold leading-[1.05] tracking-tight text-balance text-glow-dark">
-            La comunidad <span className="text-[#e31c1c]">privada</span> de reventa online
+            La comunidad privada de{" "}
+            <span className="hero-red-glow">reventa online</span>
             <br className="hidden sm:block" /> que no encontrarás en ningún sitio más.
           </h1>
 
