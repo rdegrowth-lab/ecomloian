@@ -33,42 +33,40 @@ const STYLES = `
 }
 
 .cta-bg-grid {
-  background-size: 60px 60px;
+  background-color: #080808;
+  background-size: 52px 52px;
   background-image:
-    linear-gradient(to right, rgba(10,10,10,0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(10,10,10,0.05) 1px, transparent 1px);
-  mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+    linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 75%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 75%, transparent 100%);
 }
 
 .cta-aurora {
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(227,28,28,0.18) 0%,
+    rgba(227,28,28,0.22) 0%,
     rgba(227,28,28,0.08) 40%,
     transparent 70%
   );
 }
 
 .cta-giant-bg-text {
-  font-size: 22vw;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24vw;
   line-height: 0.75;
-  font-weight: 900;
-  letter-spacing: -0.05em;
+  letter-spacing: 0.02em;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(10,10,10,0.06);
-  background: linear-gradient(180deg, rgba(10,10,10,0.08) 0%, transparent 60%);
+  -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 70%);
   -webkit-background-clip: text;
   background-clip: text;
   white-space: nowrap;
 }
 
 .cta-text-glow {
-  background: linear-gradient(180deg, #0a0a0a 0%, rgba(10,10,10,0.5) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 20px rgba(10,10,10,0.1));
+  color: #f0f0f0;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.6);
 }
 
 .cta-magnetic-btn {
