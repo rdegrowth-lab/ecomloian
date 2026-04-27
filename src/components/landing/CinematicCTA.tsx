@@ -233,9 +233,10 @@ export default function CinematicCTA({ onApply }: Props) {
         </div>
 
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.3em] text-brand-red mb-6 px-4 py-2 rounded-md"
-            style={{ background: "rgba(227,28,28,0.12)", border: "1px solid rgba(227,28,28,0.3)" }}>
-            Solo 5 plazas disponibles esta semana
+          <span className="inline-flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.32em] text-brand-subtle mb-6">
+            <span className="h-px w-8 bg-brand-border" />
+            Acceso por aplicación
+            <span className="h-px w-8 bg-brand-border" />
           </span>
 
           <h2
@@ -251,8 +252,8 @@ export default function CinematicCTA({ onApply }: Props) {
             ref={subRef}
             className="mt-6 text-lg sm:text-xl text-brand-subtle max-w-2xl mx-auto leading-relaxed"
           >
-            No es para todos. Es para quien quiere dejar de mirar y empezar a vender.
-            Aplica ahora — en 2 minutos sabes si encajas.
+            Esto no es para todos. Revisamos cada aplicación personalmente —
+            si encajas con el grupo, entras.
           </p>
 
           <div ref={btnWrapRef} className="mt-12 flex flex-col items-center gap-4">
@@ -261,11 +262,11 @@ export default function CinematicCTA({ onApply }: Props) {
               className="btn-primary-cta text-base sm:text-lg"
               style={{ padding: "18px 44px" }}
             >
-              Quiero mi plaza — Aplicar ahora
+              Aplicar a la comunidad
             </MagneticButton>
 
-            <p className="text-xs text-brand-muted">
-              ✓ Sin tarjeta de crédito · ✓ Llamada de 30 min · ✓ Respuesta en 24h
+            <p className="text-xs text-brand-muted tracking-wide">
+              2 minutos · Respuesta personal de Loian
             </p>
           </div>
         </div>
