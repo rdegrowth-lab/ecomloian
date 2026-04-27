@@ -2,7 +2,7 @@ import { Instagram } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0a0a0a] px-4 sm:px-6 py-12">
+    <footer className="bg-brand-black border-t border-brand-border px-4 sm:px-6 py-12">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
         <a href="#top" className="font-extrabold text-2xl tracking-tight">
           <span className="text-white">ECOM</span>
