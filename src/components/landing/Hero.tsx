@@ -157,17 +157,24 @@ const Hero = ({ onApply }: Props) => {
             </p>
           </div>
 
-          {/* Reveal CTA */}
+          {/* Reveal: authority & social proof (no fake scarcity) */}
           {showCTA && (
             <div className="mt-12 max-w-xl mx-auto bg-brand-surface border border-brand-border rounded-lg p-8 animate-slide-up">
-              <h3 className="font-display text-3xl sm:text-[32px] text-[#f0f0f0] tracking-wide">
-                Agenda Tu Llamada de Consultoría Gratis
+              <div className="flex items-center justify-center gap-3 text-[10px] uppercase tracking-[0.32em] text-brand-subtle">
+                <span className="h-px w-8 bg-brand-border" />
+                <span>Construido por dentro</span>
+                <span className="h-px w-8 bg-brand-border" />
+              </div>
+              <h3 className="font-display text-3xl sm:text-[34px] text-[#f0f0f0] tracking-wide mt-4">
+                Acceso por aplicación.
+                <br /> No por tarjeta.
               </h3>
-              <p className="mt-2 text-sm text-brand-subtle">
-                Solo aceptamos 5 personas nuevas por semana
+              <p className="mt-3 text-sm text-brand-subtle leading-relaxed">
+                Revisamos cada perfil personalmente. Si encajas, entras. Sin embudos,
+                sin upsells, sin promesas vacías.
               </p>
               <button onClick={scrollToForm} className="btn-primary-cta mt-6">
-                Reservar mi llamada →
+                Aplicar ahora →
               </button>
             </div>
           )}

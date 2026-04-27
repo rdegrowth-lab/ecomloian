@@ -128,29 +128,29 @@
     text-shadow: 0 2px 24px rgba(0,0,0,0.5);
   }
 
-  /* Reventa pulsing red badge */
+  /* Reventa red glowing word — same family as headings (Bebas Neue) */
   .reventa-badge {
+    font-family: 'Bebas Neue', sans-serif;
     color: #e31c1c;
+    letter-spacing: 0.01em;
     text-shadow:
-      0 0 12px rgba(0,0,0,0.95),
-      0 0 24px rgba(0,0,0,0.7),
-      0 0 40px rgba(0,0,0,0.4),
-      0 0 8px rgba(227,28,28,0.4);
-    animation: glowPulse 2.4s ease-in-out infinite;
+      0 0 18px rgba(227,28,28,0.55),
+      0 0 36px rgba(227,28,28,0.35),
+      0 0 60px rgba(227,28,28,0.2);
+    animation: glowPulse 2.8s ease-in-out infinite;
   }
   @keyframes glowPulse {
     0%, 100% {
       text-shadow:
-        0 0 10px rgba(0,0,0,0.95),
-        0 0 22px rgba(0,0,0,0.7),
-        0 0 6px rgba(227,28,28,0.3);
+        0 0 14px rgba(227,28,28,0.45),
+        0 0 28px rgba(227,28,28,0.25),
+        0 0 50px rgba(227,28,28,0.15);
     }
     50% {
       text-shadow:
-        0 0 14px rgba(0,0,0,0.99),
-        0 0 30px rgba(0,0,0,0.8),
-        0 0 16px rgba(227,28,28,0.65),
-        0 0 30px rgba(227,28,28,0.25);
+        0 0 22px rgba(227,28,28,0.7),
+        0 0 44px rgba(227,28,28,0.45),
+        0 0 80px rgba(227,28,28,0.28);
     }
   }
 
