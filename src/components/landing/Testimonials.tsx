@@ -43,18 +43,20 @@ const col3 = testimonials.slice(23, 34);
 
 const Testimonials = () => {
   return (
-    <section className="px-4 sm:px-6 py-20 max-w-6xl mx-auto bg-white">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0a0a0a]">
-          Lo que dicen los que ya están dentro
-        </h2>
-        <p className="mt-3 text-[#6b7280]">Sin editar.</p>
-      </div>
+    <section className="bg-brand-black px-4 sm:px-6 py-20">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="font-display text-4xl sm:text-5xl tracking-tight text-[#f0f0f0]">
+            Lo que dicen los que ya están dentro
+          </h2>
+          <p className="mt-3 text-brand-subtle">Sin editar.</p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[700px] overflow-hidden">
-        <TestimonialsColumn testimonials={col1} duration={25} />
-        <TestimonialsColumn testimonials={col2} duration={20} className="hidden md:block" />
-        <TestimonialsColumn testimonials={col3} duration={30} className="hidden lg:block" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[700px] overflow-hidden">
+          <TestimonialsColumn testimonials={col1} duration={25} />
+          <TestimonialsColumn testimonials={col2} duration={20} className="hidden md:block" />
+          <TestimonialsColumn testimonials={col3} duration={30} className="hidden lg:block" />
+        </div>
       </div>
     </section>
   );

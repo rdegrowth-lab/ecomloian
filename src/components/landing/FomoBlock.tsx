@@ -9,27 +9,27 @@ const items = [
 
 const FomoBlock = () => {
   return (
-    <section className="relative bg-white border-y border-[#e5e7eb] py-16 px-4 sm:px-6 overflow-hidden">
-      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-50" />
-      <div className="absolute top-1/2 left-1/2 w-[60vw] h-[60vw] max-w-[600px] max-h-[600px] bg-aurora-red animate-aurora-breathe pointer-events-none opacity-60" />
+    <section className="relative bg-brand-black border-y border-brand-border py-16 px-4 sm:px-6 overflow-hidden">
+      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-60" />
+      <div className="absolute top-1/2 left-1/2 w-[60vw] h-[60vw] max-w-[600px] max-h-[600px] bg-aurora-red animate-aurora-breathe pointer-events-none opacity-70" />
       <div className="relative z-10 max-w-2xl mx-auto text-center">
-        <h2 className="text-2xl sm:text-[32px] font-bold text-[#0a0a0a] tracking-tight">
+        <h2 className="font-display text-3xl sm:text-[40px] text-[#f0f0f0] tracking-tight">
           ¿Qué pierdes si cancelas?
         </h2>
-        <p className="mt-3 text-base text-[#e31c1c] font-medium">
+        <p className="mt-3 text-base text-brand-red font-medium">
           El valor dentro crece cada semana. Quien sale, sale en el peor momento.
         </p>
 
         <ul className="mt-10 space-y-3.5 text-left max-w-[520px] mx-auto">
           {items.map((it) => (
-            <li key={it} className="flex items-start gap-3 text-[#0a0a0a]">
-              <span className="text-[#e31c1c] font-bold mt-0.5 shrink-0">→</span>
+            <li key={it} className="flex items-start gap-3 text-[#f0f0f0]">
+              <span className="text-brand-red font-bold mt-0.5 shrink-0">→</span>
               <span>{it}</span>
             </li>
           ))}
         </ul>
 
-        <p className="mt-8 italic text-sm text-[#6b7280]">
+        <p className="mt-8 italic text-sm text-brand-subtle">
           "Los miembros con más resultados son los que llevan más tiempo dentro. No es casualidad."
         </p>
       </div>

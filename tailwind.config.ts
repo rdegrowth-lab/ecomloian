@@ -14,6 +14,17 @@ export default {
     },
     extend: {
       colors: {
+        brand: {
+          black: "#080808",
+          dark: "#111111",
+          surface: "#161616",
+          border: "#222222",
+          red: "#e31c1c",
+          "red-dim": "#9b1212",
+          white: "#f5f5f5",
+          muted: "#666666",
+          subtle: "#888888",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -64,7 +75,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["DM Sans", "system-ui", "sans-serif"],
+        display: ["Bebas Neue", "sans-serif"],
+        body: ["DM Sans", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

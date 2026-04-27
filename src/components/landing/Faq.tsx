@@ -36,25 +36,25 @@ const Faq = () => {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="relative bg-white overflow-hidden px-4 sm:px-6 py-20">
-      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-50" />
+    <section className="relative bg-brand-black overflow-hidden px-4 sm:px-6 py-20">
+      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-60" />
       <div className="relative z-10 max-w-3xl mx-auto">
-      <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0a0a0a] text-center mb-10">
+      <h2 className="font-display text-4xl sm:text-5xl tracking-tight text-[#f0f0f0] text-center mb-10">
         Preguntas frecuentes
       </h2>
-      <div className="divide-y divide-[#e5e7eb] border-y border-[#e5e7eb] bg-white/60 backdrop-blur-sm rounded-lg">
+      <div className="divide-y divide-brand-border border border-brand-border bg-brand-surface/60 backdrop-blur-sm rounded-md">
         {faqs.map((f, i) => {
           const isOpen = open === i;
           return (
-            <div key={f.q}>
+            <div key={f.q} className="px-5">
               <button
                 onClick={() => setOpen(isOpen ? null : i)}
                 className="w-full flex items-center justify-between gap-4 py-5 text-left"
                 aria-expanded={isOpen}
               >
-                <span className="text-base sm:text-lg font-semibold text-[#0a0a0a]">{f.q}</span>
+                <span className="text-base sm:text-lg font-semibold text-[#f0f0f0]">{f.q}</span>
                 <span
-                  className="text-[#e31c1c] text-2xl font-light shrink-0 transition-transform duration-300"
+                  className="text-brand-red text-2xl font-light shrink-0 transition-transform duration-300"
                   style={{ transform: isOpen ? "rotate(45deg)" : "rotate(0deg)" }}
                 >
                   +
@@ -69,7 +69,7 @@ const Faq = () => {
                     transition={{ duration: 0.25, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <div className="pb-6 text-[#6b7280] leading-relaxed">{f.a}</div>
+                    <div className="pb-6 text-brand-subtle leading-relaxed">{f.a}</div>
                   </motion.div>
                 )}
               </AnimatePresence>
