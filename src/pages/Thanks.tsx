@@ -9,15 +9,15 @@ const Thanks = ({ name, onBack }: Props) => {
   const friendlyName = name?.split(" ")[0] || "amigo";
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
-      <header className="border-b border-[#e5e7eb] px-4 sm:px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-brand-black flex flex-col font-sans">
+      <header className="border-b border-brand-border px-4 sm:px-6 py-4 flex items-center justify-between">
         <a href="#" className="font-extrabold text-lg">
-          <span className="text-[#0a0a0a]">ECOM</span>
+          <span className="text-[#f0f0f0]">ECOM</span>
           <span className="text-[#e31c1c]"> LOIAN</span>
         </a>
         <button
           onClick={onBack}
-          className="text-sm text-[#6b7280] hover:text-[#0a0a0a] transition"
+          className="text-sm text-brand-subtle hover:text-[#f0f0f0] transition"
         >
           ← Volver al inicio
         </button>
@@ -26,13 +26,13 @@ const Thanks = ({ name, onBack }: Props) => {
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-16">
         <div className="w-full max-w-xl text-center">
           <div className="text-5xl mb-4">🎉</div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-[#0a0a0a] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#f0f0f0] tracking-tight">
             ¡Perfecto, {friendlyName}!
           </h1>
-          <p className="mt-4 text-[#6b7280] text-lg">
+          <p className="mt-4 text-brand-subtle text-lg">
             Accede a la comunidad de prelanzamiento.
           </p>
-          <p className="mt-2 text-[#6b7280]">
+          <p className="mt-2 text-brand-subtle">
             Te esperamos en WhatsApp. Allí te compartimos acceso inmediato a la comunidad.
           </p>
 
@@ -52,10 +52,10 @@ const Thanks = ({ name, onBack }: Props) => {
             Entrar a la comunidad
           </a>
 
-          <p className="mt-6 text-xs text-[#6b7280]">
+          <p className="mt-6 text-xs text-brand-subtle">
             Si no se abre, copia y pega esto en tu navegador:
           </p>
-          <p className="mt-1 text-xs text-[#6b7280] break-all font-mono">
+          <p className="mt-1 text-xs text-brand-subtle break-all font-mono">
             {WHATSAPP_LINK}
           </p>
         </div>

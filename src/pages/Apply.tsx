@@ -130,26 +130,26 @@ const Apply = ({ onBack, onComplete }: Props) => {
   const canSubmit = urgency >= 1 && urgency <= 10;
 
   return (
-    <div className="relative min-h-screen bg-white flex flex-col font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-brand-black flex flex-col font-sans overflow-hidden">
       {/* Subtle grid background */}
       <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-50" />
 
       {/* Header */}
-      <header className="relative z-10 border-b border-[#e5e7eb] px-4 sm:px-6 py-4 flex items-center justify-between bg-white/80 backdrop-blur">
+      <header className="relative z-10 border-b border-brand-border px-4 sm:px-6 py-4 flex items-center justify-between bg-brand-black/80 backdrop-blur">
         <a href="#" className="font-extrabold text-lg">
-          <span className="text-[#0a0a0a]">ECOM</span>
+          <span className="text-[#f0f0f0]">ECOM</span>
           <span className="text-[#e31c1c]"> LOIAN</span>
         </a>
         <button
           onClick={onBack}
-          className="text-sm text-[#6b7280] hover:text-[#0a0a0a] transition"
+          className="text-sm text-brand-subtle hover:text-[#f0f0f0] transition"
         >
           ← Volver
         </button>
       </header>
 
       {/* Progress bar */}
-      <div className="relative z-10 h-1 bg-[#f5f5f5]">
+      <div className="relative z-10 h-1 bg-brand-surface">
         <div
           className="h-full bg-[#e31c1c] transition-all duration-500"
           style={{ width: `${progress}%` }}
@@ -172,7 +172,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
               >
                 <div>
                   <p className="text-sm text-[#e31c1c] font-semibold mb-2">1 → 5</p>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#f0f0f0]">
                     ¿Cuál es tu nombre?
                   </h2>
                 </div>
@@ -183,7 +183,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && canNext1 && next()}
-                  className="w-full border-b-2 border-[#e5e7eb] bg-transparent text-2xl py-3 focus:outline-none focus:border-[#e31c1c] transition"
+                  className="w-full border-b-2 border-brand-border bg-transparent text-2xl py-3 focus:outline-none focus:border-[#e31c1c] transition"
                 />
                 <button
                   disabled={!canNext1}
@@ -208,10 +208,10 @@ const Apply = ({ onBack, onComplete }: Props) => {
               >
                 <div>
                   <p className="text-sm text-[#e31c1c] font-semibold mb-2">2 → 5</p>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#f0f0f0]">
                     ¿Cuál es tu email?
                   </h2>
-                  <p className="mt-2 text-sm text-[#6b7280]">
+                  <p className="mt-2 text-sm text-brand-subtle">
                     Te contactaremos aquí con los siguientes pasos.
                   </p>
                 </div>
@@ -223,7 +223,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && canNext2 && next()}
-                  className="w-full border-b-2 border-[#e5e7eb] bg-transparent text-2xl py-3 focus:outline-none focus:border-[#e31c1c] transition"
+                  className="w-full border-b-2 border-brand-border bg-transparent text-2xl py-3 focus:outline-none focus:border-[#e31c1c] transition"
                 />
 
                 <button
@@ -249,7 +249,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
               >
                 <div>
                   <p className="text-sm text-[#e31c1c] font-semibold mb-2">3 → 5</p>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#f0f0f0]">
                     ¿Cuál es tu mayor reto AHORA?
                   </h2>
                 </div>
@@ -263,14 +263,14 @@ const Apply = ({ onBack, onComplete }: Props) => {
                       }}
                       className={`w-full text-left border-2 rounded-lg px-4 py-4 transition flex items-center gap-3 ${
                         problem === p
-                          ? "border-[#e31c1c] bg-[#fff5f5]"
-                          : "border-[#e5e7eb] bg-white hover:border-[#0a0a0a]"
+                          ? "border-[#e31c1c] bg-brand-red/10"
+                          : "border-brand-border bg-brand-black hover:border-brand-red/60"
                       }`}
                     >
-                      <span className="w-6 h-6 rounded border border-[#e5e7eb] flex items-center justify-center text-xs font-bold text-[#6b7280]">
+                      <span className="w-6 h-6 rounded border border-brand-border flex items-center justify-center text-xs font-bold text-brand-subtle">
                         {String.fromCharCode(65 + i)}
                       </span>
-                      <span className="text-[#0a0a0a]">{p}</span>
+                      <span className="text-[#f0f0f0]">{p}</span>
                     </button>
                   ))}
                 </div>
@@ -297,7 +297,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
               >
                 <div>
                   <p className="text-sm text-[#e31c1c] font-semibold mb-2">4 → 5</p>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#f0f0f0]">
                     ¿Cuánto capital estás dispuesto a invertir en solucionar esto?
                   </h2>
                 </div>
@@ -311,14 +311,14 @@ const Apply = ({ onBack, onComplete }: Props) => {
                       }}
                       className={`w-full text-left border-2 rounded-lg px-4 py-4 transition flex items-center gap-3 ${
                         capital?.label === c.label
-                          ? "border-[#e31c1c] bg-[#fff5f5]"
-                          : "border-[#e5e7eb] bg-white hover:border-[#0a0a0a]"
+                          ? "border-[#e31c1c] bg-brand-red/10"
+                          : "border-brand-border bg-brand-black hover:border-brand-red/60"
                       }`}
                     >
-                      <span className="w-6 h-6 rounded border border-[#e5e7eb] flex items-center justify-center text-xs font-bold text-[#6b7280]">
+                      <span className="w-6 h-6 rounded border border-brand-border flex items-center justify-center text-xs font-bold text-brand-subtle">
                         {i + 1}
                       </span>
-                      <span className="text-[#0a0a0a]">{c.label}</span>
+                      <span className="text-[#f0f0f0]">{c.label}</span>
                     </button>
                   ))}
                 </div>
@@ -345,7 +345,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
               >
                 <div>
                   <p className="text-sm text-[#e31c1c] font-semibold mb-2">5 → 5</p>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a]">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#f0f0f0]">
                     ¿Qué tan urgente es resolver esto?
                   </h2>
                 </div>
@@ -354,7 +354,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
                   <div className="text-7xl font-extrabold text-[#e31c1c] mb-2">
                     {urgency}
                   </div>
-                  <p className="text-sm text-[#6b7280]">de 10</p>
+                  <p className="text-sm text-brand-subtle">de 10</p>
                 </div>
 
                 <div className="px-2">
@@ -367,7 +367,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
                     onChange={(e) => setUrgency(parseInt(e.target.value, 10))}
                     className="w-full accent-[#e31c1c]"
                   />
-                  <div className="flex justify-between text-xs text-[#6b7280] mt-2">
+                  <div className="flex justify-between text-xs text-brand-subtle mt-2">
                     <span>1 — Puedo esperar</span>
                     <span>10 — Lo necesito ASAP</span>
                   </div>
@@ -398,11 +398,11 @@ const Apply = ({ onBack, onComplete }: Props) => {
                 transition={{ duration: 0.3 }}
                 className="text-center py-16"
               >
-                <div className="w-12 h-12 mx-auto border-4 border-[#e5e7eb] border-t-[#e31c1c] rounded-full animate-spin" />
-                <p className="mt-6 text-[#0a0a0a] font-medium text-lg">
+                <div className="w-12 h-12 mx-auto border-4 border-brand-border border-t-[#e31c1c] rounded-full animate-spin" />
+                <p className="mt-6 text-[#f0f0f0] font-medium text-lg">
                   Enviando tu aplicación…
                 </p>
-                <p className="mt-2 text-sm text-[#6b7280]">
+                <p className="mt-2 text-sm text-brand-subtle">
                   Datos recibidos correctamente
                 </p>
               </motion.div>
@@ -410,7 +410,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
           </AnimatePresence>
         </div>
 
-        <p className="mt-12 text-xs text-[#6b7280]">
+        <p className="mt-12 text-xs text-brand-subtle">
           Paso {Math.min(step, TOTAL_STEPS)} de {TOTAL_STEPS}
         </p>
       </div>
