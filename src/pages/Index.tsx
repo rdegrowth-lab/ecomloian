@@ -95,18 +95,18 @@ const Index = () => {
   }
 
   return (
-    <main className="min-h-screen bg-white text-[#0a0a0a]">
+    <main className="min-h-screen bg-brand-black text-[#f0f0f0]">
       <StickyNav onApply={goApply} />
       <Hero onApply={goApply} />
       <Ticker />
       <Benefits />
 
       {/* Modules */}
-      <section className="px-4 sm:px-6 pt-16 pb-8 max-w-3xl mx-auto text-center bg-white">
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0a0a0a]">
+      <section className="px-4 sm:px-6 pt-16 pb-8 max-w-3xl mx-auto text-center bg-brand-black">
+        <h2 className="font-display text-4xl sm:text-5xl tracking-tight text-[#f0f0f0]">
           Un paso a paso para vender desde la primera semana
         </h2>
-        <p className="mt-3 text-[#6b7280]">
+        <p className="mt-3 text-brand-subtle">
           Validado por los miembros del primer batch.
         </p>
       </section>
@@ -117,6 +117,16 @@ const Index = () => {
       <CinematicCTA onApply={goApply} />
       <Faq />
       <Footer />
+
+      {/* Mobile sticky CTA */}
+      <div
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 px-4 py-3 border-t border-brand-border"
+        style={{ background: "rgba(8,8,8,0.97)" }}
+      >
+        <button onClick={goApply} className="btn-primary-cta w-full">
+          Aplicar ahora →
+        </button>
+      </div>
     </main>
   );
 };
