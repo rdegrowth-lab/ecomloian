@@ -132,7 +132,7 @@ const Apply = ({ onBack, onComplete }: Props) => {
   return (
     <div className="relative min-h-screen bg-brand-black flex flex-col font-sans overflow-hidden">
       {/* Subtle grid background */}
-      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-50" />
+      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-60" />
 
       {/* Header */}
       <header className="relative z-10 border-b border-brand-border px-4 sm:px-6 py-4 flex items-center justify-between bg-brand-black/80 backdrop-blur">
