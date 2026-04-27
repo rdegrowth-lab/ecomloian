@@ -155,13 +155,13 @@ const MagneticButton = React.forwardRef<HTMLButtonElement, MagneticButtonProps>(
 MagneticButton.displayName = "MagneticButton";
 
 const MarqueeRow = () => (
-  <div className="flex items-center gap-12 text-sm font-semibold text-[#6b7280] whitespace-nowrap px-6">
-    <span>Comunidad privada ✦</span>
-    <span>Proveedores verificados ✦</span>
-    <span>Calls con Loian ✦</span>
-    <span>Bolsa de trabajo interna ✦</span>
-    <span>Plazas limitadas ✦</span>
-    <span>Acceso inmediato ✦</span>
+  <div className="flex items-center gap-12 text-sm font-semibold text-brand-subtle whitespace-nowrap px-6">
+    <span>Comunidad privada</span><span className="text-brand-red">·</span>
+    <span>Proveedores verificados</span><span className="text-brand-red">·</span>
+    <span>Calls con Loian</span><span className="text-brand-red">·</span>
+    <span>Bolsa de trabajo interna</span><span className="text-brand-red">·</span>
+    <span>Plazas limitadas</span><span className="text-brand-red">·</span>
+    <span>Acceso inmediato</span><span className="text-brand-red">·</span>
   </div>
 );
 
