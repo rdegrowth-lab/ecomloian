@@ -96,7 +96,6 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-white text-[#0a0a0a]">
-      <AnnouncementBar />
       <StickyNav onApply={goApply} />
       <Hero onApply={goApply} />
       <Ticker />
