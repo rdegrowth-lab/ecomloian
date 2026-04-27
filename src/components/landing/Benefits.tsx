@@ -37,27 +37,27 @@ const items: Item[] = [
 
 const Benefits = () => {
   return (
-    <section className="relative bg-white overflow-hidden px-4 sm:px-6 py-20">
-      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-60" />
+    <section className="relative bg-brand-black overflow-hidden px-4 sm:px-6 py-20">
+      <div className="absolute inset-0 bg-grid-soft pointer-events-none opacity-70" />
       <div className="relative z-10 max-w-5xl mx-auto">
       <div className="text-center max-w-2xl mx-auto mb-14">
-        <h2 className="text-3xl sm:text-[36px] font-bold tracking-tight text-[#0a0a0a] leading-tight">
+        <h2 className="font-display text-4xl sm:text-[44px] tracking-tight text-[#f0f0f0] leading-tight">
           Todo lo que necesitas para ganar dinero revendiendo
         </h2>
-        <p className="mt-4 text-[#6b7280] max-w-[520px] mx-auto leading-relaxed">
+        <p className="mt-4 text-brand-subtle max-w-[520px] mx-auto leading-relaxed">
           Sin rodeos. Sin teoría vacía. Esto es lo que tienes desde el primer día.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
+      <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
         {items.map(({ Icon, title, desc }) => (
-          <div key={title} className="flex gap-4">
-            <div className="shrink-0 w-10 h-10 rounded-lg bg-[#fff5f5] border border-[#fee2e2] flex items-center justify-center">
-              <Icon className="w-5 h-5 text-[#e31c1c]" strokeWidth={2.2} />
+          <div key={title} className="flex gap-4 bg-brand-surface border border-brand-border rounded-md p-5 hover:border-brand-red/60 transition-colors">
+            <div className="shrink-0 w-10 h-10 rounded-md bg-brand-red/10 border border-brand-red/30 flex items-center justify-center">
+              <Icon className="w-5 h-5 text-brand-red" strokeWidth={2.2} />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#0a0a0a]">{title}</h3>
-              <p className="mt-1.5 text-sm text-[#6b7280] leading-relaxed">{desc}</p>
+              <h3 className="text-base font-bold text-[#f0f0f0]">{title}</h3>
+              <p className="mt-1.5 text-sm text-brand-subtle leading-relaxed">{desc}</p>
             </div>
           </div>
         ))}
