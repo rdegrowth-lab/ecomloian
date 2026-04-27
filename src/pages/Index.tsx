@@ -9,6 +9,7 @@ import FomoBlock from "@/components/landing/FomoBlock";
 import Testimonials from "@/components/landing/Testimonials";
 import CinematicCTA from "@/components/landing/CinematicCTA";
 import Faq from "@/components/landing/Faq";
+import Footer from "@/components/landing/Footer";
 import Apply, { BudgetTag } from "./Apply";
 import Thanks from "./Thanks";
 
@@ -116,6 +117,7 @@ const Index = () => {
       <Testimonials />
       <CinematicCTA onApply={goApply} />
       <Faq />
+      <Footer />
     </main>
   );
 };
