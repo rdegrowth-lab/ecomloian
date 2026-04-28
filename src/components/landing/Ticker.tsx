@@ -4,7 +4,6 @@ const items = [
   "Sistema aplicado en +15 nichos",
   "Mentoría grupal semanal en vivo",
   "Comunidad privada en Skool",
-  "Downsell automático — nunca pierdes un lead",
 ];
 
 const Ticker = () => {
