@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
+import { useVideoGate } from "@/context/VideoGate";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -168,6 +169,7 @@ const MarqueeRow = () => (
 type Props = { onApply: () => void };
 
 export default function CinematicCTA({ onApply }: Props) {
+  const { unlocked } = useVideoGate();
   const wrapperRef = useRef<HTMLElement | null>(null);
   const giantTextRef = useRef<HTMLDivElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
@@ -258,15 +260,22 @@ export default function CinematicCTA({ onApply }: Props) {
 
           <div ref={btnWrapRef} className="mt-12 flex flex-col items-center gap-4">
             <MagneticButton
-              onClick={onApply}
-              className="btn-primary-cta text-base sm:text-lg"
+              onClick={unlocked ? onApply : undefined}
+              disabled={!unlocked}
+              aria-disabled={!unlocked}
+              className={cn(
+                "btn-primary-cta text-base sm:text-lg",
+                unlocked ? "cta-unlocked" : "cta-locked"
+              )}
               style={{ padding: "18px 44px" }}
             >
-              Aplicar a la comunidad
+              {unlocked ? "Aplicar a la comunidad" : "Aplicar a la comunidad"}
             </MagneticButton>
 
             <p className="text-xs text-brand-muted tracking-wide">
-              2 minutos · Respuesta personal de Loian
+              {unlocked
+                ? "2 minutos · Respuesta personal de Loian"
+                : "Mira el vídeo completo para desbloquear el acceso"}
             </p>
           </div>
         </div>
