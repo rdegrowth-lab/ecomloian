@@ -1,7 +1,8 @@
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
+import { useVideoGate } from "@/context/VideoGate";
 
 type Props = { onApply: () => void };
 
@@ -105,26 +106,79 @@ const HERO_STYLES = `
 }
 `;
 
+const YT_VIDEO_ID = "JzilG8pBn_o";
+
+declare global {
+  interface Window {
+    YT?: any;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+let ytApiPromise: Promise<void> | null = null;
+const loadYouTubeAPI = (): Promise<void> => {
+  if (typeof window === "undefined") return Promise.resolve();
+  if (window.YT && window.YT.Player) return Promise.resolve();
+  if (ytApiPromise) return ytApiPromise;
+  ytApiPromise = new Promise((resolve) => {
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      prev?.();
+      resolve();
+    };
+  });
+  return ytApiPromise;
+};
+
 const Hero = ({ onApply }: Props) => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [progress, setProgress] = useState(0);
+  const playerContainerRef = useRef<HTMLDivElement | null>(null);
+  const playerRef = useRef<any>(null);
+  const intervalRef = useRef<number | null>(null);
+  const { progress, unlocked, setProgress } = useVideoGate();
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const onTime = () => {
-      if (!video.duration || isNaN(video.duration)) return;
-      const pct = Math.min(100, (video.currentTime / video.duration) * 100);
-      setProgress(pct);
-    };
-    video.addEventListener("timeupdate", onTime);
-    video.addEventListener("ended", () => setProgress(100));
-    return () => {
-      video.removeEventListener("timeupdate", onTime);
-    };
-  }, []);
+    let cancelled = false;
+    loadYouTubeAPI().then(() => {
+      if (cancelled || !playerContainerRef.current) return;
+      playerRef.current = new window.YT.Player(playerContainerRef.current, {
+        videoId: YT_VIDEO_ID,
+        playerVars: {
+          rel: 0,
+          modestbranding: 1,
+          playsinline: 1,
+        },
+        events: {
+          onReady: () => {
+            if (intervalRef.current) window.clearInterval(intervalRef.current);
+            intervalRef.current = window.setInterval(() => {
+              const p = playerRef.current;
+              if (!p || !p.getDuration) return;
+              const dur = p.getDuration();
+              const cur = p.getCurrentTime();
+              if (dur > 0) {
+                setProgress(Math.min(100, (cur / dur) * 100));
+              }
+            }, 500);
+          },
+          onStateChange: (e: any) => {
+            // ended
+            if (e.data === 0) setProgress(100);
+          },
+        },
+      });
+    });
 
-  const unlocked = progress >= 80;
+    return () => {
+      cancelled = true;
+      if (intervalRef.current) window.clearInterval(intervalRef.current);
+      try {
+        playerRef.current?.destroy?.();
+      } catch {}
+    };
+  }, [setProgress]);
 
   const scrollToForm = () => {
     const el = document.getElementById("formulario");
@@ -169,17 +223,9 @@ const Hero = ({ onApply }: Props) => {
           {/* VSL */}
           <div className="mt-12 max-w-[760px] mx-auto">
             <div className="hero-vsl-frame aspect-video w-full rounded-lg overflow-hidden p-1.5">
-              <video
-                ref={videoRef}
-                controls
-                playsInline
-                preload="metadata"
-                className="w-full h-full rounded bg-black"
-                poster="/placeholder.svg"
-              >
-                <source src="/vsl.mp4" type="video/mp4" />
-                Tu navegador no soporta vídeo HTML5.
-              </video>
+              <div className="w-full h-full rounded overflow-hidden bg-black">
+                <div ref={playerContainerRef} className="w-full h-full" />
+              </div>
             </div>
 
             {/* Progress bar */}
@@ -243,4 +289,3 @@ const Hero = ({ onApply }: Props) => {
 };
 
 export default Hero;
-
