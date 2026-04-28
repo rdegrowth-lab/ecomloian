@@ -169,12 +169,22 @@ const MarqueeRow = () => (
 type Props = { onApply: () => void };
 
 export default function CinematicCTA({ onApply }: Props) {
-  const { unlocked } = useVideoGate();
+  const { unlocked, openLockedModal, triggerShake, shakeNonce } = useVideoGate();
   const wrapperRef = useRef<HTMLElement | null>(null);
   const giantTextRef = useRef<HTMLDivElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const subRef = useRef<HTMLParagraphElement | null>(null);
   const btnWrapRef = useRef<HTMLDivElement | null>(null);
+  const ctaBtnRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (shakeNonce === 0 || unlocked) return;
+    const el = ctaBtnRef.current;
+    if (!el) return;
+    el.classList.remove("cta-shake");
+    void el.offsetWidth;
+    el.classList.add("cta-shake");
+  }, [shakeNonce, unlocked]);
 
   useEffect(() => {
     if (!wrapperRef.current) return;
