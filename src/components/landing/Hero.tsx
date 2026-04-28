@@ -137,7 +137,8 @@ const Hero = ({ onApply }: Props) => {
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<any>(null);
   const intervalRef = useRef<number | null>(null);
-  const { progress, unlocked, setProgress } = useVideoGate();
+  const { progress, unlocked, setProgress, openLockedModal, triggerShake, shakeNonce } = useVideoGate();
+  const ctaRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -149,9 +150,15 @@ const Hero = ({ onApply }: Props) => {
           rel: 0,
           modestbranding: 1,
           playsinline: 1,
+          autoplay: 1,
+          mute: 1,
         },
         events: {
-          onReady: () => {
+          onReady: (e: any) => {
+            try {
+              e.target.mute();
+              e.target.playVideo();
+            } catch {}
             if (intervalRef.current) window.clearInterval(intervalRef.current);
             intervalRef.current = window.setInterval(() => {
               const p = playerRef.current;
@@ -164,21 +171,42 @@ const Hero = ({ onApply }: Props) => {
             }, 500);
           },
           onStateChange: (e: any) => {
-            // ended
             if (e.data === 0) setProgress(100);
           },
         },
       });
     });
 
+    const onPlayRequest = () => {
+      try {
+        const p = playerRef.current;
+        if (!p) return;
+        p.unMute?.();
+        p.setVolume?.(100);
+        p.playVideo?.();
+      } catch {}
+    };
+    window.addEventListener("hero:play-video", onPlayRequest);
+
     return () => {
       cancelled = true;
+      window.removeEventListener("hero:play-video", onPlayRequest);
       if (intervalRef.current) window.clearInterval(intervalRef.current);
       try {
         playerRef.current?.destroy?.();
       } catch {}
     };
   }, [setProgress]);
+
+  // Shake when triggered globally (only relevant if locked)
+  useEffect(() => {
+    if (shakeNonce === 0 || unlocked) return;
+    const el = ctaRef.current;
+    if (!el) return;
+    el.classList.remove("cta-shake");
+    void el.offsetWidth;
+    el.classList.add("cta-shake");
+  }, [shakeNonce, unlocked]);
 
   const scrollToForm = () => {
     const el = document.getElementById("formulario");
@@ -187,7 +215,11 @@ const Hero = ({ onApply }: Props) => {
   };
 
   const handleCTA = () => {
-    if (!unlocked) return;
+    if (!unlocked) {
+      triggerShake();
+      openLockedModal();
+      return;
+    }
     scrollToForm();
   };
 
@@ -243,12 +275,12 @@ const Hero = ({ onApply }: Props) => {
             {/* CTA bloqueado hasta 80% */}
             <div className="mt-6 flex flex-col items-center gap-3">
               <MagneticButton
+                ref={ctaRef}
                 onClick={handleCTA}
-                disabled={!unlocked}
                 aria-disabled={!unlocked}
                 className={cn(
                   "btn-primary-cta text-base",
-                  unlocked ? "cta-unlocked" : "cta-locked"
+                  unlocked ? "cta-unlocked" : "cta-locked-interactive"
                 )}
               >
                 {unlocked ? "Acceso al formulario →" : "Acceso al formulario"}
