@@ -270,12 +270,15 @@ export default function CinematicCTA({ onApply }: Props) {
 
           <div ref={btnWrapRef} className="mt-12 flex flex-col items-center gap-4">
             <MagneticButton
-              onClick={unlocked ? onApply : undefined}
-              disabled={!unlocked}
+              ref={ctaBtnRef}
+              onClick={() => {
+                if (unlocked) onApply();
+                else { triggerShake(); openLockedModal(); }
+              }}
               aria-disabled={!unlocked}
               className={cn(
                 "btn-primary-cta text-base sm:text-lg",
-                unlocked ? "cta-unlocked" : "cta-locked"
+                unlocked ? "cta-unlocked" : "cta-locked-interactive"
               )}
               style={{ padding: "18px 44px" }}
             >

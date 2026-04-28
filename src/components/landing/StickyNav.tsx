@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useVideoGate } from "@/context/VideoGate";
 
@@ -6,13 +6,23 @@ type Props = { onApply: () => void };
 
 const StickyNav = ({ onApply }: Props) => {
   const [show, setShow] = useState(false);
-  const { unlocked } = useVideoGate();
+  const { unlocked, openLockedModal, triggerShake, shakeNonce } = useVideoGate();
+  const btnRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > 300);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (shakeNonce === 0 || unlocked) return;
+    const el = btnRef.current;
+    if (!el) return;
+    el.classList.remove("cta-shake");
+    void el.offsetWidth;
+    el.classList.add("cta-shake");
+  }, [shakeNonce, unlocked]);
 
   return (
     <div
@@ -26,10 +36,13 @@ const StickyNav = ({ onApply }: Props) => {
           <span className="text-brand-red"> LOIAN</span>
         </a>
         <button
-          onClick={unlocked ? onApply : undefined}
-          disabled={!unlocked}
+          ref={btnRef}
+          onClick={() => {
+            if (unlocked) onApply();
+            else { triggerShake(); openLockedModal(); }
+          }}
           aria-disabled={!unlocked}
-          className={cn("btn-primary-cta", unlocked ? "cta-unlocked" : "cta-locked")}
+          className={cn("btn-primary-cta", unlocked ? "cta-unlocked" : "cta-locked-interactive")}
           style={{ padding: "10px 22px", fontSize: "12px" }}
         >
           Aplicar ahora
