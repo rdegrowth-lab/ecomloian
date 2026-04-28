@@ -74,39 +74,67 @@ const HERO_STYLES = `
 }
 .hero-progress-track {
   height: 4px;
-  background: #222;
+  background: #2a2a2a;
   border-radius: 2px;
   overflow: hidden;
+  width: 100%;
 }
 .hero-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #e31c1c, #ff3a3a);
-  transition: width 0.5s linear;
+  background: #FF0000;
+  box-shadow: 0 0 12px rgba(255,0,0,0.5);
+  transition: width 0.3s linear;
+}
+.cta-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.4);
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+}
+.cta-unlocked {
+  opacity: 1;
+  cursor: pointer;
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+  animation: ctaUnlock 0.8s ease-out;
+}
+@keyframes ctaUnlock {
+  0% { transform: scale(0.96); opacity: 0.5; }
+  60% { transform: scale(1.03); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 `;
 
-const VIDEO_DURATION_SECONDS = 90; // estimated VSL length
-
 const Hero = ({ onApply }: Props) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const start = Date.now();
-    const id = setInterval(() => {
-      const elapsed = (Date.now() - start) / 1000;
-      const pct = Math.min(100, (elapsed / VIDEO_DURATION_SECONDS) * 100);
+    const video = videoRef.current;
+    if (!video) return;
+    const onTime = () => {
+      if (!video.duration || isNaN(video.duration)) return;
+      const pct = Math.min(100, (video.currentTime / video.duration) * 100);
       setProgress(pct);
-      if (pct >= 100) clearInterval(id);
-    }, 500);
-    return () => clearInterval(id);
+    };
+    video.addEventListener("timeupdate", onTime);
+    video.addEventListener("ended", () => setProgress(100));
+    return () => {
+      video.removeEventListener("timeupdate", onTime);
+    };
   }, []);
 
-  const showCTA = progress >= 80;
+  const unlocked = progress >= 80;
 
   const scrollToForm = () => {
     const el = document.getElementById("formulario");
     if (el) el.scrollIntoView({ behavior: "smooth" });
     else onApply();
+  };
+
+  const handleCTA = () => {
+    if (!unlocked) return;
+    scrollToForm();
   };
 
   return (
@@ -141,24 +169,54 @@ const Hero = ({ onApply }: Props) => {
           {/* VSL */}
           <div className="mt-12 max-w-[760px] mx-auto">
             <div className="hero-vsl-frame aspect-video w-full rounded-lg overflow-hidden p-1.5">
-              <iframe
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Video de presentación ECOM LOIAN"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full rounded"
-              />
+              <video
+                ref={videoRef}
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full h-full rounded bg-black"
+                poster="/placeholder.svg"
+              >
+                <source src="/vsl.mp4" type="video/mp4" />
+                Tu navegador no soporta vídeo HTML5.
+              </video>
             </div>
-            <div className="mt-3 hero-progress-track">
+
+            {/* Progress bar */}
+            <div
+              className="mt-4 hero-progress-track"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(progress)}
+              aria-label="Progreso del vídeo"
+            >
               <div className="hero-progress-fill" style={{ width: `${progress}%` }} />
             </div>
-            <p className="mt-3 text-[13px] text-brand-subtle">
-              Mira el vídeo completo antes de continuar
-            </p>
+
+            {/* CTA bloqueado hasta 80% */}
+            <div className="mt-6 flex flex-col items-center gap-3">
+              <MagneticButton
+                onClick={handleCTA}
+                disabled={!unlocked}
+                aria-disabled={!unlocked}
+                className={cn(
+                  "btn-primary-cta text-base",
+                  unlocked ? "cta-unlocked" : "cta-locked"
+                )}
+              >
+                {unlocked ? "Acceso al formulario →" : "Acceso al formulario"}
+              </MagneticButton>
+              <p className="text-xs text-brand-muted">
+                {unlocked
+                  ? "Acceso desbloqueado — completa tu aplicación"
+                  : "Mira el vídeo completo para desbloquear el acceso"}
+              </p>
+            </div>
           </div>
 
           {/* Reveal: authority & social proof (no fake scarcity) */}
-          {showCTA && (
+          {unlocked && (
             <div className="mt-12 max-w-xl mx-auto bg-brand-surface border border-brand-border rounded-lg p-8 animate-slide-up">
               <div className="flex items-center justify-center gap-3 text-[10px] uppercase tracking-[0.32em] text-brand-subtle">
                 <span className="h-px w-8 bg-brand-border" />
@@ -178,16 +236,6 @@ const Hero = ({ onApply }: Props) => {
               </button>
             </div>
           )}
-
-          {/* Always-on primary CTA */}
-          <div className="mt-10 flex flex-col items-center gap-3">
-            <MagneticButton onClick={onApply} className="btn-primary-cta text-base">
-              Quiero entrar — Aplicar ahora
-            </MagneticButton>
-            <p className="text-xs text-brand-muted">
-              Aplicar no te obliga a nada — en 2 minutos sabes si encajas
-            </p>
-          </div>
         </div>
       </section>
     </>
@@ -195,3 +243,4 @@ const Hero = ({ onApply }: Props) => {
 };
 
 export default Hero;
+
