@@ -74,14 +74,34 @@ const HERO_STYLES = `
 }
 .hero-progress-track {
   height: 4px;
-  background: #222;
+  background: #2a2a2a;
   border-radius: 2px;
   overflow: hidden;
+  width: 100%;
 }
 .hero-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #e31c1c, #ff3a3a);
-  transition: width 0.5s linear;
+  background: #FF0000;
+  box-shadow: 0 0 12px rgba(255,0,0,0.5);
+  transition: width 0.3s linear;
+}
+.cta-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.4);
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+}
+.cta-unlocked {
+  opacity: 1;
+  cursor: pointer;
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+  animation: ctaUnlock 0.8s ease-out;
+}
+@keyframes ctaUnlock {
+  0% { transform: scale(0.96); opacity: 0.5; }
+  60% { transform: scale(1.03); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 `;
 
