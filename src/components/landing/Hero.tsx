@@ -93,6 +93,12 @@ const HERO_STYLES = `
   filter: grayscale(0.4);
   transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
 }
+.cta-locked-interactive {
+  opacity: 0.55;
+  cursor: pointer;
+  filter: grayscale(0.35);
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+}
 .cta-unlocked {
   opacity: 1;
   cursor: pointer;
