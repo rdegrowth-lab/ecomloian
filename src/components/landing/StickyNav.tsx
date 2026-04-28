@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { useVideoGate } from "@/context/VideoGate";
 
 type Props = { onApply: () => void };
 
 const StickyNav = ({ onApply }: Props) => {
   const [show, setShow] = useState(false);
+  const { unlocked } = useVideoGate();
 
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > 300);
@@ -22,7 +25,13 @@ const StickyNav = ({ onApply }: Props) => {
           <span className="text-[#f0f0f0]">ECOM</span>
           <span className="text-brand-red"> LOIAN</span>
         </a>
-        <button onClick={onApply} className="btn-primary-cta" style={{ padding: "10px 22px", fontSize: "12px" }}>
+        <button
+          onClick={unlocked ? onApply : undefined}
+          disabled={!unlocked}
+          aria-disabled={!unlocked}
+          className={cn("btn-primary-cta", unlocked ? "cta-unlocked" : "cta-locked")}
+          style={{ padding: "10px 22px", fontSize: "12px" }}
+        >
           Aplicar ahora
         </button>
       </nav>
