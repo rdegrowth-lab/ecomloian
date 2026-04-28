@@ -155,6 +155,7 @@ const Index = () => {
         <Footer />
 
         <MobileStickyCTA onApply={goApply} />
+        <LockedModal />
       </main>
     </VideoGateProvider>
   );
