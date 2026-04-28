@@ -6,7 +6,7 @@ const items: Item[] = [
   {
     Icon: Package,
     title: "Formación en vídeo completa",
-    desc: "6 módulos grabados: fundamentos, proveedores, tienda, logística, escalado y marca personal. Vas a tu ritmo, sin caducidad.",
+    desc: "6 módulos grabados: Mentalidad del Revendedor, Nicho y Proveedores, Tu Tienda Live, Operativa, La Curva €0 → €5.000 y marca personal. Vas a tu ritmo, sin caducidad.",
   },
   {
     Icon: Handshake,
