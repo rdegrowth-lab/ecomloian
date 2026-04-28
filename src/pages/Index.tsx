@@ -28,7 +28,7 @@ const moduloItems = [
   },
   {
     id: 2,
-    title: "Módulo 2 — Nicho + Proveedores (Acceso yan)",
+    title: "Módulo 2 — Nicho + Proveedores",
     description:
       "Cómo elegir tu nicho rentable. Lista de proveedores yan verificados. Negociación real, márgenes reales, qué preguntar antes de comprometerte.",
     imageSrc: "https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&q=80",
