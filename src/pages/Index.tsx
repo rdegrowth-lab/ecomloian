@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useState } from "react";
 import AnnouncementBar from "@/components/landing/AnnouncementBar";
 import StickyNav from "@/components/landing/StickyNav";
@@ -10,6 +11,7 @@ import Testimonials from "@/components/landing/Testimonials";
 import CinematicCTA from "@/components/landing/CinematicCTA";
 import Faq from "@/components/landing/Faq";
 import Footer from "@/components/landing/Footer";
+import LockedModal from "@/components/landing/LockedModal";
 import Apply, { BudgetTag } from "./Apply";
 import Thanks from "./Thanks";
 import { VideoGateProvider, useVideoGate } from "@/context/VideoGate";
@@ -69,19 +71,31 @@ const moduloItems = [
 ];
 
 const MobileStickyCTA = ({ onApply }: { onApply: () => void }) => {
-  const { unlocked } = useVideoGate();
+  const { unlocked, openLockedModal, triggerShake, shakeNonce } = useVideoGate();
+  const btnRef = React.useRef<HTMLButtonElement | null>(null);
+  React.useEffect(() => {
+    if (shakeNonce === 0 || unlocked) return;
+    const el = btnRef.current;
+    if (!el) return;
+    el.classList.remove("cta-shake");
+    void el.offsetWidth;
+    el.classList.add("cta-shake");
+  }, [shakeNonce, unlocked]);
   return (
     <div
       className="md:hidden fixed bottom-0 left-0 right-0 z-40 px-4 py-3 border-t border-brand-border"
       style={{ background: "rgba(8,8,8,0.97)" }}
     >
       <button
-        onClick={unlocked ? onApply : undefined}
-        disabled={!unlocked}
+        ref={btnRef}
+        onClick={() => {
+          if (unlocked) onApply();
+          else { triggerShake(); openLockedModal(); }
+        }}
         aria-disabled={!unlocked}
-        className={cn("btn-primary-cta w-full", unlocked ? "cta-unlocked" : "cta-locked")}
+        className={cn("btn-primary-cta w-full", unlocked ? "cta-unlocked" : "cta-locked-interactive")}
       >
-        {unlocked ? "Aplicar ahora →" : "Mira el vídeo para desbloquear"}
+        {unlocked ? "Aplicar ahora →" : "Aplicar ahora"}
       </button>
     </div>
   );
@@ -141,6 +155,7 @@ const Index = () => {
         <Footer />
 
         <MobileStickyCTA onApply={goApply} />
+        <LockedModal />
       </main>
     </VideoGateProvider>
   );
